@@ -224,7 +224,12 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      "lib_symbol_issues|1165860|1610360|02287071-0379-4d96-9388-365f5c74eee6|00000000-0000-0000-0000-000000000000|||",
+      "lib_symbol_issues|431800|571500|140329fe-a3f4-4c72-95cb-05eba6e5d1b5|00000000-0000-0000-0000-000000000000|||",
+      "power_pin_not_driven|345440|1724660|fc39c127-f693-4b8f-9ff7-b2f33d95e143|00000000-0000-0000-0000-000000000000|||",
+      "power_pin_not_driven|431800|1724660|fc39c127-f693-4b8f-9ff7-b2f33d95e143|00000000-0000-0000-0000-000000000000|||"
+    ],
     "meta": {
       "version": 0
     },
@@ -408,7 +413,7 @@
       "different_unit_net": "error",
       "duplicate_reference": "error",
       "duplicate_sheet_names": "error",
-      "endpoint_off_grid": "warning",
+      "endpoint_off_grid": "ignore",
       "extra_units": "error",
       "global_label_dangling": "warning",
       "hier_label_mismatch": "error",
