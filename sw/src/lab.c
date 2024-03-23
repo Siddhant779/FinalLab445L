@@ -45,19 +45,31 @@
 /* Add whatever else you need here! */
 #include "./lib/RGB/RGB.h"
 
+/** MMAP Pin definitions. */
+#define PF0   (*((volatile uint32_t *)0x40025004)) // Left Button
+#define PF1   (*((volatile uint32_t *)0x40025008)) // RED LED
+#define PF2   (*((volatile uint32_t *)0x40025010)) // BLUE LED
+#define PF3   (*((volatile uint32_t *)0x40025020)) // GREEN LED
+#define PF4   (*((volatile uint32_t *)0x40025040)) // Right Button
+
+void Pause(void);
+void DelayWait10ms(uint32_t n);
+
 int main(void) {
     /* Disable interrupts for initialization. */
     DisableInterrupts();
 
     /* Initialize clocking. */
-    PLL_Init(Bus80Mhz);
+    PLL_Init(Bus80MHz);
 
     /* Allow us to talk to the PC via PuTTy! Check device manager to see which
        COM serial port we are on. The baud rate is 115200 chars/s. */
-    UART_Init(7);
+    UART_Init();
 
     /* Initialize all ports. */
     Unified_Port_Init();
+	
+		ST7735_InitR(INITR_REDTAB);     // Start up display.
 
     /* Start RGB flashing. WARNING! BRIGHT FLASHING COLORS. DO NOT RUN IF YOU HAVE EPILEPSY. */
     RGBInit();
