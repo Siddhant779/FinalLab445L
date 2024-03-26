@@ -22,7 +22,7 @@
  */
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
-
+/*
 void (*PeriodicTask1)(void);   // user function
 
 // ***************** TIMER1A_Init ****************
@@ -57,3 +57,4 @@ void Timer1A_Stop(void){
   TIMER1_CTL_R = 0x00000000;  // 10) disable timer1A
 
 }
+*/
