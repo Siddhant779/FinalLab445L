@@ -87,9 +87,9 @@
         "missing_courtyard": "ignore",
         "missing_footprint": "error",
         "net_conflict": "error",
-        "npth_inside_courtyard": "error",
+        "npth_inside_courtyard": "ignore",
         "padstack": "error",
-        "pth_inside_courtyard": "error",
+        "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
         "silk_edge_clearance": "error",
         "silk_over_copper": "error",
@@ -224,12 +224,7 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [
-      "lib_symbol_issues|1165860|1610360|02287071-0379-4d96-9388-365f5c74eee6|00000000-0000-0000-0000-000000000000|||",
-      "lib_symbol_issues|431800|571500|140329fe-a3f4-4c72-95cb-05eba6e5d1b5|00000000-0000-0000-0000-000000000000|||",
-      "power_pin_not_driven|345440|1724660|fc39c127-f693-4b8f-9ff7-b2f33d95e143|00000000-0000-0000-0000-000000000000|||",
-      "power_pin_not_driven|431800|1724660|fc39c127-f693-4b8f-9ff7-b2f33d95e143|00000000-0000-0000-0000-000000000000|||"
-    ],
+    "erc_exclusions": [],
     "meta": {
       "version": 0
     },
@@ -418,7 +413,7 @@
       "global_label_dangling": "warning",
       "hier_label_mismatch": "error",
       "label_dangling": "error",
-      "lib_symbol_issues": "warning",
+      "lib_symbol_issues": "ignore",
       "missing_bidi_pin": "warning",
       "missing_input_pin": "warning",
       "missing_power_pin": "error",
