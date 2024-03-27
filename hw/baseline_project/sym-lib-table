@@ -8,4 +8,5 @@
   (lib (name "ti_LM4041CILPR")(type "KiCad")(uri "${KIPRJMOD}/symbols/ti_LM4041CILPR.kicad_sym")(options "")(descr ""))
   (lib (name "ECE445L")(type "KiCad")(uri "C:/Keil_v5/ValvanoWareTM4C123v5/ece-445l-lab-6-prithviksenthil/hw/baseline_project/symbols/ECE445L.kicad_sym")(options "")(descr ""))
   (lib (name "ti_TLV5616CP")(type "KiCad")(uri "${KIPRJMOD}/symbols/ul_TLV5616CP.kicad_sym")(options "")(descr ""))
+  (lib (name "ILI9341")(type "KiCad")(uri "${KIPRJMOD}/symbols/tft_320x240.kicad_sym")(options "")(descr ""))
 )
