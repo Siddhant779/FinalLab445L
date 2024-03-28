@@ -2,21 +2,30 @@
 
 #include "./inc/tm4c123gh6pm.h"
 #include "Switch.h"
+	
+#define PC4		(*((volatile uint32_t *) 0x40006040))	// UP
+#define PC5		(*((volatile uint32_t *) 0x40006080))	// RIGHT
+#define PC6		(*((volatile uint32_t *) 0x40006100))	// LEFT
+#define PC7		(*((volatile uint32_t *) 0x40006200))	// DOWN
+#define PF4		(*((volatile uint32_t *) 0x40025040))	// MODE
 
-#define PB0   (*((volatile uint32_t *)0x40005004))	// 
-#define PB1  	(*((volatile uint32_t *)0x40005008))	// 
-#define PB2  	(*((volatile uint32_t *)0x40005010))	// 
 
-
-volatile static unsigned long LastPlay;
-volatile static unsigned long LastRewind;
+volatile static unsigned long LastUp;
+volatile static unsigned long LastRight;
+volatile static unsigned long LastLeft;
+volatile static unsigned long LastDown;
 volatile static unsigned long LastMode;
 
-
+// NEEDS TO BE CHANGED TO PORTC AND PORTF
+// STILL NEEDS WORK
 static void SwitchArm(void) {
-	GPIO_PORTB_ICR_R = 0x07;
-	GPIO_PORTB_IM_R |= 0x07;
-	NVIC_PRI0_R = (NVIC_PRI0_R&0xFFFF00FF) | 0x0000A000;	//Set priority to 5
+	// Clear and reset interrupts
+	GPIO_PORTC_ICR_R = 0xF0;
+	GPIO_PORTC_IM_R |= 0xF0;
+	GPIO_PORTF_ICR_R = 0x08;
+	GPIO_PORTF_IM_R |= 0x08;
+	NVIC_PRI0_R = (NVIC_PRI0_R&0xFF00FFFF) | 0x00A00000;	// Set priority to 5 on PortC
+	NVIC_PRI7_R = (NVIC_PRI0_R&0xFF00FFFF) | 0x00A00000;	// Set priority to 5 on PortF
 	NVIC_EN0_R = 1<<1;						// Enable interrupt 1 (PortB) in NVIC
 }
 
@@ -33,54 +42,71 @@ static void Timer1Arm(void) {
 	TIMER1_CTL_R = 0x00000001;		// Enable TIMER1A
 }
 
+
 void switch_init(void) {
-	GPIO_PORTB_DIR_R &= ~0x07;		// Make PB0,1,2 inputs
-	GPIO_PORTB_AFSEL_R &= ~0x07;	// Disable alt function for PB0,1,2
-	GPIO_PORTB_DEN_R |= 0x07;			// Enable digital I/O on PB0,1,2
-	GPIO_PORTB_AMSEL_R &= ~0x07;	// Disable analog function for PB0,1,2
-	GPIO_PORTB_PUR_R |= 0x07;			// Enable internal weak pull-up on PB0,1,2
-	GPIO_PORTB_IS_R &= ~0x07;			// PB0,1,2 is edge-sensitive
-	GPIO_PORTB_IBE_R |= 0x07;			// PB0,1,2 is both edges
+	GPIO_PORTC_DIR_R &= ~0xF0;		// Make PC4,5,6,7 inputs
+	GPIO_PORTC_AFSEL_R &= ~0xF0;	// Disable alt function for PC4,5,6,7
+	GPIO_PORTC_DEN_R |= 0xF0;			// Enable digital I/O on PC4,5,6,7
+	GPIO_PORTC_AMSEL_R &= ~0xF0;	// Disable analog function for PC4,5,6,72
+	GPIO_PORTC_PUR_R |= 0xF0;			// Enable internal weak pull-up on PC4,5,6,7
+	GPIO_PORTC_IS_R &= ~0xF0;			// PC4,5,6,7 is edge-sensitive
+	GPIO_PORTC_IBE_R |= 0xF0;			// PC4,5,6,7 is both edges
 	
-	SwitchArm();									// Arm PortB buttons
+	// Same initializations for PF4
+	GPIO_PORTF_DIR_R &= ~0x08;		
+	GPIO_PORTF_AFSEL_R &= ~0x08;	
+	GPIO_PORTF_DEN_R |= 0x08;			
+	GPIO_PORTF_AMSEL_R &= ~0x08;	
+	GPIO_PORTF_PUR_R |= 0x08;			
+	GPIO_PORTF_IS_R &= ~0x08;			
+	GPIO_PORTF_IBE_R |= 0x08;			
+	
+	SwitchArm();									// Arm PortC buttons
 	SYSCTL_RCGCTIMER_R |= 0x02;		// Activate timer1
-	LastPlay = PB0;
-	LastRewind = PB1;
-	LastMode = PB2;
+	// Set initial values of all buttons
+	LastUp = PC4;
+	LastRight = PC5;
+	LastLeft = PC6;
+	LastDown = PC7;
+	LastMode = PF4;
 }
 
 
-void GPIOPortB_Handler(void) {
-	GPIO_PORTB_IM_R &= ~0x07;			// Disarm button interrupt
-	
-	if(GPIO_PORTB_RIS_R&0x01)	{		// Poll PB0
-		if(LastPlay) {
-			// Service play/pause
-			TIMER2_CTL_R = 0x00000001;
+void GPIOPortC_Handler(void) {
+	GPIO_PORTC_IM_R &= ~0x07;			// Disarm button interrupt
+	// Determine which button(s) were pressed
+	if(GPIO_PORTC_RIS_R&0x10)	{		// Poll PC4
+		if(LastUp) {
+			// Service up button
 		}
 	}
-	if(GPIO_PORTB_RIS_R&0x02)	{		// Poll PB1
-		if(LastRewind) {
+	if(GPIO_PORTC_RIS_R&0x20)	{		// Poll PC5
+		if(LastRight) {
+			// Service right button
+		}
+	}
+	if(GPIO_PORTC_RIS_R&0x40)	{		// Poll PC6
+		if(LastLeft) {
+			// Service left button
 
 		}
 	}
-	if(GPIO_PORTB_RIS_R&0x04)	{		// Poll PB2
-		if(LastMode) {
-			// Service mode change
-
+	if(GPIO_PORTC_RIS_R&0x80)	{		// Poll PC7
+		if(LastDown) {
+			// Service down button
 		}
 	}
 	Timer1Arm();
 }
 
 void Timer1A_Handler(void) {
+	// Debouncing is complete
 	TIMER1_IMR_R = 0x00000000;		// Disarm interrupt
-	LastPlay = PB0;			// Save values
-	LastRewind = PB1;
-	LastMode = PB2;
+	// Save all switch values 
+	LastUp = PC4;
+	LastRight = PC5;
+	LastLeft = PC6;
+	LastDown = PC7;
+	LastMode = PF4;
 	SwitchArm();				// Clear PortB flags and rearm interrupts
-}
-
-void change_mode(void) {
-	
 }
