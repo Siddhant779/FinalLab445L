@@ -15,43 +15,18 @@
 #include "./tm4c123gh6pm.h"
 
 int dac_init() {
-    /**
-     * Unified_Port_Init in Lab5.c calls Port_D_Init, which initializes the Port
-     * D GPIOs for the appropriate alternate functionality (SSI).
-     *
-     * According to Table 15-1. SSI Signals in the datasheet, this corresponds
-     * to SSI1. The corresponding Valvanoware register defines are at L302 and
-     * L2670 in inc/tm4c123gh6pm.h. Use this in combination with the datasheet
-     * or any existing code to write your driver! An example of how to
-     * initialize SSI is found in L741 in inc/ST7735.c.
-     */
-    //Initialize PD3,1,0 as SSI1 MOSI, FS & SCK
-    // SYSCTL_RCGCSSI_R |= 0x02;  // activate SSI1
-    // SYSCTL_RCGCGPIO_R |= 0x08; // active port D 
-    // while((SYSCTL_PRGPIO_R&0x08)==0){};
-    // //PD3 PD2 PD1 PD0 - odnt include PD2 for afsel or for anything - A without PD2 F with PD2
-    // //afsel amsel den and pctl are already set 
-    // //GPIO_PORTD_DIR_R |= 0x02;
-    // SSI1_CR1_R = 0x00000000;
-    // SSI1_CPSR_R = 0x02;
-    // SSI1_CR0_R &= ~(0x0000FFF0);
-    // SSI1_CR0_R |= 0x0F;
-    // SSI1_CR1_R |= 0x00000002;
-    // SSI1_CR1_R &= ~SSI_CR1_SSE;           // disable SSI
-    // SSI1_CR1_R &= ~SSI_CR1_MS;            // master mode
-    // SSI1_CC_R = (SSI1_CC_R&~SSI_CC_CS_M)+SSI_CC_CS_SYSPLL;   
-    // SSI1_CPSR_R = (SSI1_CPSR_R&~SSI_CPSR_CPSDVSR_M)+10; 
-    // SSI1_CR0_R &= ~(SSI_CR0_SCR_M |       // SCR = 0 (8 Mbps data rate)
-    //               SSI_CR0_SPH |         // SPH = 0
-    //               SSI_CR0_SPO);         // SPO = 0
-    //                                     // FRF = Freescale format
-    // SSI1_CR0_R = (SSI1_CR0_R&~SSI_CR0_FRF_M)+SSI_CR0_FRF_MOTO;
-    //                                     // DSS = 8-bit data
-    // SSI1_CR0_R = (SSI1_CR0_R&~SSI_CR0_DSS_M)+SSI_CR0_DSS_8;
-    // SSI1_CR1_R |= SSI_CR1_SSE;            // enable SSI
-
-
-  SYSCTL_RCGCSSI_R |= 0x02;       // activate SSI1
+  /**
+   * Unified_Port_Init in Lab5.c calls Port_D_Init, which initializes the Port
+   * D GPIOs for the appropriate alternate functionality (SSI).
+   *
+   * According to Table 15-1. SSI Signals in the datasheet, this corresponds
+   * to SSI1. The corresponding Valvanoware register defines are at L302 and
+   * L2670 in inc/tm4c123gh6pm.h. Use this in combination with the datasheet
+   * or any existing code to write your driver! An example of how to
+   * initialize SSI is found in L741 in inc/ST7735.c.
+  */
+	
+	SYSCTL_RCGCSSI_R |= 0x02;       // activate SSI1
   SYSCTL_RCGCGPIO_R |= 0x08;      // activate port D
   
   while((SYSCTL_PRGPIO_R&0x08) == 0){}; // ready?
@@ -68,16 +43,15 @@ int dac_init() {
   SSI1_CR0_R |= 0x0F;             // DSS = 16-bit data
   SSI1_CR1_R |= 0x00000002;       // enable SSI
 
-
-    return 1;
+  return 1;
 }
 
 int dac_output(uint16_t data) {
-    // An example of how to send data via SSI is found in L534 of inc/ST7735.c.
-    // Remember that 4 out of the 16 bits is for DAC operation. The last 12 bits
-    // are for data. Read the datasheet!
-    while((SSI1_SR_R&SSI_SR_TNF)==0){};   // wait until transmit FIFO not full
-    //DC = DC_DATA;
-    SSI1_DR_R = (data);              // data out
-    return 1; // UNIMPLEMENTED
+	// An example of how to send data via SSI is found in L534 of inc/ST7735.c.
+  // Remember that 4 out of the 16 bits is for DAC operation. The last 12 bits
+  // are for data. Read the datasheet!
+  while((SSI1_SR_R&SSI_SR_TNF)==0){};   // wait until transmit FIFO not full
+  //DC = DC_DATA;
+  SSI1_DR_R = (data);              // data out
+  return 1; // UNIMPLEMENTED
 }
