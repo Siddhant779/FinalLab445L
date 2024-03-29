@@ -57,3 +57,8 @@ void Timer2A_Stop(void){
   NVIC_DIS0_R = 1<<23;        // 9) disable interrupt 23 in NVIC
   TIMER2_CTL_R = 0x00000000;  // 10) disable timer2A
 }
+
+void Timer2A_Start(void) {
+	NVIC_EN0_R = 1<<23;         // 9) enable IRQ 23 in NVIC
+  TIMER2_CTL_R = 0x00000001;  // 10) enable timer2A	
+}

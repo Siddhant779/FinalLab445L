@@ -35,4 +35,6 @@ void Timer2A_Init(void(*task)(void), uint32_t period, uint32_t priority);
 
 void Timer2A_Stop(void);
 
+void Timer2A_Start(void);
+
 #endif // __TIMER2INTS_H__

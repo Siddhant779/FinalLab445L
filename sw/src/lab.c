@@ -44,8 +44,6 @@
 
 /* Add whatever else you need here! */
 #include "./lib/RGB/RGB.h"
-#include "./inc/DAC.h"
-#include "./inc//Timer2A.h"
 #include "Switch.h"
 #include "Music.h"
 
@@ -58,7 +56,6 @@
 	
 void Pause(void);
 void DelayWait10ms(uint32_t n);
-void Play(void);
 	
 int main(void) {
     /* Disable interrupts for initialization. */
@@ -74,7 +71,7 @@ int main(void) {
     /* Initialize all ports. */
     Unified_Port_Init();
 	
-		ST7735_InitR(INITR_GREENTAB);     // Start up display.
+		ST7735_InitR(INITR_REDTAB);     // Start up display.
 
     /* Start RGB flashing. WARNING! BRIGHT FLASHING COLORS. DO NOT RUN IF YOU HAVE EPILEPSY. */
     RGBInit();
