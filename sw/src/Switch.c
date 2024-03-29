@@ -2,7 +2,7 @@
 
 #include "./inc/tm4c123gh6pm.h"
 #include "Switch.h"
-#include "./inc/LED.h"
+#include "Music.h"
 	
 #define PC4		(*((volatile uint32_t *) 0x40006040))	// UP
 #define PC5		(*((volatile uint32_t *) 0x40006080))	// RIGHT

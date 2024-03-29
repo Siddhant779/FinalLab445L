@@ -109,8 +109,8 @@ int main(void) {
     UART_OutString("Starting...\r\n");
 		
     while (1) {
-        /* TODO: Write your code here! */
-        WaitForInterrupt();
+			/* TODO: Write your code here! */
+			WaitForInterrupt();
     }
     return 1;
 }
