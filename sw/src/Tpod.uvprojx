@@ -469,6 +469,41 @@
               <FileType>5</FileType>
               <FilePath>..\inc\Timer3A.h</FilePath>
             </File>
+            <File>
+              <FileName>Clock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\inc\Clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>Clock.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\inc\Clock.h</FilePath>
+            </File>
+            <File>
+              <FileName>esp8266_base.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\inc\esp8266_base.c</FilePath>
+            </File>
+            <File>
+              <FileName>esp8266_base.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\inc\esp8266_base.h</FilePath>
+            </File>
+            <File>
+              <FileName>tm4c123gh6pm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\inc\tm4c123gh6pm.h</FilePath>
+            </File>
+            <File>
+              <FileName>UART5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\inc\UART5.c</FilePath>
+            </File>
+            <File>
+              <FileName>UART5.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\inc\UART5.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
