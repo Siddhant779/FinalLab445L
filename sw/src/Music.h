@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+extern uint16_t Volume;
+extern uint16_t DacData;
+
 // Initialize music driver
 void music_init(void);
 
