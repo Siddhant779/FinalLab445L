@@ -84,6 +84,7 @@ void GPIOPortC_Handler(void) {
 	if(GPIO_PORTC_RIS_R&0x10)	{		// Poll PC4
 		if(LastUp) {
 			// Service up button
+			rewind_song();
 		}
 	}
 	if(GPIO_PORTC_RIS_R&0x20)	{		// Poll PC5
@@ -94,6 +95,8 @@ void GPIOPortC_Handler(void) {
 	if(GPIO_PORTC_RIS_R&0x40)	{		// Poll PC6
 		if(LastLeft) {
 			// Service left button
+			if(is_playing()) pause_song();
+			else unpause_song();
 		}
 	}
 	if(GPIO_PORTC_RIS_R&0x80)	{		// Poll PC7
