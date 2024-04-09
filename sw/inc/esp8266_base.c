@@ -26,9 +26,9 @@
 #define DEBUG2                // Second level of Debug
 #define DEBUG3                // Third level of Debug
 
-//#undef DEBUG1               // Comment out to enable DEBUG1
-//#undef DEBUG2               // Comment out to enable DEBUG2
-//#undef DEBUG3               // Comment out to enable DEBUG3
+#undef DEBUG1               // Comment out to enable DEBUG1
+#undef DEBUG2               // Comment out to enable DEBUG2
+#undef DEBUG3               // Comment out to enable DEBUG3
 
 
 #define UART5_FR_TXFF            0x00000020  // UART Transmit FIFO Full
@@ -56,11 +56,8 @@
 #define BIT3  0x8   
 
 //#define SKIP_SETUP 0
-char    eid[32]           = "aa26646";           // Your EID goes here
-char    ssid[32]          = "HP Deskjet 2624";   // Your WiFi Access Point name goes here
-char    pass[32]          = "Desk26241130";			 // Your WiFi Access Point password goes here
-char    mqtt_broker[32]   = "broker.emqx.io";    // MQTT Broker
-char    mqtt_port[8]      = "1883";							 // MQTT Port (TCP/IP if applicable)
+char    ssid[32]          = "Joon's iPhone";   // Your WiFi Access Point name goes here
+char    pass[32]          = "AllowedProtocolMask";			 // Your WiFi Access Point password goes here
 
 char    inchar;   
 
@@ -82,7 +79,6 @@ void Reset_8266(void)
   PE1 = BIT1;             // Enable the 8266
   DelayWait1ms(5000);     // Wait before setting up 8266
   PE3 = LOW;              // Turn off LED
-
 }
 
 // ----------------------------------------------------------------------
@@ -112,49 +108,31 @@ void SetupWiFi(void)
     
     DelayWait1ms(300);
   }
-  
-  UART5_OutString(eid);           // Student EID - Used for individualizing MQTT Topics
-  UART5_OutChar(',');
-	
+
   UART5_OutString(ssid);          // Send WiFi SSID to ESP8266
   UART5_OutChar(',');
   
   UART5_OutString(pass);          // Send WiFi Password to ESP8266
   UART5_OutChar(',');      
   
-  UART5_OutString(mqtt_broker);   // Send IP address of MQTT Broker   
-  UART5_OutChar(',');       
-  
-  UART5_OutString(mqtt_port);     // Send MQTT port number  
-  UART5_OutChar(',');             // Extra comma needed for ESP8266 parser code
-  
   UART5_OutChar('\n');            // Send NL to indicate EOT   
   
     #ifdef DEBUG2
     
     UART_OutChar('\n');  
-    UART_OutString(eid);    
-    UART_OutChar(',');
-    //UART_OutString(ssid);
+    UART_OutString(ssid);
     UART_OutChar(',');
     UART_OutString(pass);
-    UART_OutChar(',');
-    UART_OutString(mqtt_broker);
-    UART_OutChar(',');
-    UART_OutString(mqtt_port);
     UART_OutChar(',');
     UART_OutChar('\n');      
     #endif
     
     #ifdef DEBUG3
-    //ST7735_DrawString(0,3,ssid, ST7735_Color565(255, 0, 0 ));
+    ST7735_DrawString(0,3,ssid, ST7735_Color565(255, 0, 0 ));
     ST7735_DrawString(0,4,pass, ST7735_Color565(255, 0, 0 ));
-    ST7735_DrawString(0,5,eid, ST7735_Color565(255, 0, 0 ));
-    ST7735_DrawString(0,6,mqtt_broker, ST7735_Color565(255, 0, 0 ));
-    ST7735_DrawString(0,7,mqtt_port, ST7735_Color565(255, 0, 0 ));
     #endif
   
-  while ((RDY) | ((UART5_FR_R & UART5_FR_RXFE) ==0)) { 
+  while ((RDY) | ((UART5_FR_R & UART5_FR_RXFE) ==	0)) { 
     if ((UART5_FR_R & UART5_FR_RXFE) ==0 ){
         inchar =(UART5_DR_R & 0xFF);      
 			#ifdef DEBUG1
