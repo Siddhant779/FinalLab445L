@@ -9,7 +9,7 @@ extern void SD_initSDCard(void);
 extern void SD_openFile(char* filename);
 
 //for closing the file based on the filename
-extern void SD_closeFile(char *filename)
+extern void SD_closeFile(char *filename);
 
 //for reading the file - pass in what buffer you want and how many bytes for reading 
 extern void SD_read(uint8_t* buffer, uint32_t numBytes);
