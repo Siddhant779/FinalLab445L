@@ -543,6 +543,16 @@
               <FileType>1</FileType>
               <FilePath>.\ILI9341.c</FilePath>
             </File>
+            <File>
+              <FileName>SD.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SD.c</FilePath>
+            </File>
+            <File>
+              <FileName>SD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SD.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

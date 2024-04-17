@@ -2,12 +2,6 @@
 #define _ILI9341H_
 #include <stdint.h>
 
-/*
- *  ILI9341 Driver for TM4C123GXL - Header file
- *  Allen Jiang
- *  319H: Intro to Embedded Systems
- *  January 2020
- */
 
 //#include <cstdint>
 

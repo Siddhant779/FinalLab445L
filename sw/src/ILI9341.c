@@ -1,8 +1,4 @@
 /*
- *  ILI9341 Driver for TM4C123GXL
- *  Allen Jiang
- *  319H: Intro to Embedded Systems
- *  January 2020
  *
  *
  *              ILI9341
@@ -13,7 +9,7 @@
  *  SD_SCK: PB4           T_CS: -
  * SD_MISO: PB6          T_CLK: -
  * SD_MOSI: PB7           MISO: -
- *   SD_CS: PB5            LED: 3.3V
+ *   SD_CS: PB0            LED: 3.3V
  *                         SCK: PA2
  *                        MOSI: PA5
  *                          DC: PA6
@@ -23,6 +19,8 @@
  *                         VCC: 3.3V
 
  */
+ 
+ 
 
 // //use Port A for display 
 // // use port B for touchscreen and sd card 
