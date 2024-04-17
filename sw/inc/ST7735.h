@@ -655,4 +655,6 @@ void ST7735_Line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
 void ST7735_SetX(int32_t newX);
 
 
+void Delay1ms(uint32_t n);
+
 #endif
