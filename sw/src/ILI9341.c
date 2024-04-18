@@ -77,6 +77,11 @@ static uint8_t rotation;           // 0 to 3
 static int16_t _width = ILI9341_TFTWIDTH;   // this could probably be a constant, except it is used in Adafruit_GFX and depends on image rotation
 static int16_t _height = ILI9341_TFTHEIGHT;
 
+uint32_t Xcord=52; // position along the horizonal axis 0 to 52
+uint32_t Ycord=0; // position along the vertical axis 0 to 22
+uint16_t TextColor = 0x03E0;
+
+
 static const uint8_t Font[] = {
   0x00, 0x00, 0x00, 0x00, 0x00,
   0x3E, 0x5B, 0x4F, 0x5B, 0x3E,
@@ -663,25 +668,82 @@ void ILI9341_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t 
     for (j = 0; j<8; j++) {
       if (line & 0x1) {
         if (size == 1) // default size
-          //ILI9341_drawPixel(x+i, y+j, textColor);
-          ILI9341_drawPixel(y-j, x-i, textColor);
+          ILI9341_drawPixel(x-i, y+j, textColor);
+          //ILI9341_drawPixel(y-j, x-i, textColor);
           //ST7735_DrawPixel(x+i, y+j, textColor);
         else {  // big size
-          ILI9341_fillRect(y-(j*size), x-(i*size), size, size, textColor);
+          //ILI9341_fillRect(y-(j*size), x-(i*size), size, size, textColor);
+          ILI9341_fillRect(x-(i*size), y+(j*size), size, size, textColor);
           //ST7735_FillRect(x+(i*size), y+(j*size), size, size, textColor);
         }
       } else if (bgColor != textColor) {
         if (size == 1) // default size
-          ILI9341_drawPixel(y-j, x-i, bgColor);
+          //ILI9341_drawPixel(y-j, x-i, bgColor);
+          ILI9341_drawPixel(x-i, y+j, bgColor);
           //ST7735_DrawPixel(x+i, y+j, bgColor);
         else {  // big size
-          ILI9341_fillRect(y-j*size, x-i*size, size, size, bgColor);
+          //ILI9341_fillRect(y-j*size, x-i*size, size, size, bgColor);
+          ILI9341_fillRect(x-(i*size), y+(j*size), size, size, bgColor);
           //ST7735_FillRect(x+i*size, y+j*size, size, size, bgColor);
         }
       }
       line >>= 1;
     }
   }
+}
+
+uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor, uint8_t size){
+  uint32_t count = 0;
+  if(y>22) return 0;
+  while(*pt){
+    ILI9341_DrawCharS(x*6, y*10, *pt, textColor, ST7735_BLACK, 1);
+    pt++;
+    x = x-size;
+    if(x < 0) return count;  // number of characters printed
+    count++;
+  }
+  return count;  // number of characters printed
+}
+
+
+void ILI9341_OutChar(char ch, uint8_t size){
+  if((ch == 10) || (ch == 13) || (ch == 27)){
+    Ycord+=size; Xcord=52;
+    if(Ycord>22){
+      Ycord = 0;
+    }
+    ILI9341_DrawString(0,Ycord,"                     ",TextColor, size);
+    return;
+  }
+  ILI9341_DrawCharS(Xcord*6,Ycord*10,ch,0x03E0,ILI9341_BLACK, size);
+  Xcord-=size;
+  if(Xcord < 0){
+    Xcord = 0;
+    ILI9341_DrawCharS(Xcord*6,Ycord*10,'*',0x03E0,ILI9341_BLACK, size);
+  }
+  return;
+}
+
+void ILI9341_OutString(char *ptr){
+  while(*ptr){
+    ILI9341_OutChar(*ptr, 1);
+    ptr = ptr + 1;
+  }
+}
+
+void ILI9341_OutStringSize(char *ptr, uint8_t size){
+  while(*ptr){
+    ILI9341_OutChar(*ptr, size);
+    ptr = ptr + 1;
+  }
+}
+
+void ILI9341_SetCursor(uint32_t newX, uint32_t newY){
+  if((newX > 52) || (newY > 22)){       // bad input
+    return;                             // do nothing
+  }
+  Xcord = newX;
+  Ycord = newY;
 }
 
 void setRotation(uint8_t m) {
@@ -693,8 +755,8 @@ void setRotation(uint8_t m) {
     m = (MADCTL_MX | MADCTL_BGR);
     _width = ILI9341_TFTWIDTH;
     _height = ILI9341_TFTHEIGHT;
-    Delay1ms(100);
     writeData(MADCTL_MX | MADCTL_BGR);
+    Delay1ms(100);
     break;
   case 1:
     m = (MADCTL_MV | MADCTL_BGR);
@@ -724,254 +786,3 @@ void setRotation(uint8_t m) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-// #include "ILI9341.h"
-
-// #include <stdio.h>
-// #include <stdint.h>
-// #include <stdlib.h>
-// #include "../inc/tm4c123gh6pm.h"
-// //use Port A for display 
-// // use port B for touchscreen and sd card 
-// // PB0 - SD card cs PB1 touchscreen cs PB2 touchIRQ PB4 - clk  - on the discord 
-// // MISO ---->> unconnected
-// // LED  ---->>  3V
-// // SCK ---->>  PA2
-// // MOSI ---->> PA5
-// // DC ---->>  PA6
-// // RESET ---->> PA7
-// // CS ----> unconnected 
-// // GND ---->> GND
-// // VCC ---->> 3V
-
-// //USE THE ADAFRUIT SSD1306 library 
-
-// #define SSI_CR0_SCR_M           0x0000FF00  // SSI Serial Clock Rate
-// #define SSI_CR0_SPH             0x00000080  // SSI Serial Clock Phase
-// #define SSI_CR0_SPO             0x00000040  // SSI Serial Clock Polarity
-// #define SSI_CR0_FRF_M           0x00000030  // SSI Frame Format Select
-// #define SSI_CR0_FRF_MOTO        0x00000000  // Freescale SPI Frame Format
-// #define SSI_CR0_DSS_M           0x0000000F  // SSI Data Size Select
-// #define SSI_CR0_DSS_8           0x00000007  // 8-bit data
-// #define SSI_CR1_MS              0x00000004  // SSI Master/Slave Select
-// #define SSI_CR1_SSE             0x00000002  // SSI Synchronous Serial Port
-//                                             // Enable
-// #define SSI_SR_BSY              0x00000010  // SSI Busy Bit
-// #define SSI_SR_TNF              0x00000002  // SSI Transmit FIFO Not Full
-// #define SSI_CPSR_CPSDVSR_M      0x000000FF  // SSI Clock Prescale Divisor
-// #define SSI_CC_CS_M             0x0000000F  // SSI Baud Clock Source
-// #define SSI_CC_CS_SYSPLL        0x00000000  // Either the system clock (if the
-//                                             // PLL bypass is in effect) or the
-//                                             // PLL output (default)
-// #define SYSCTL_RCGC1_SSI0       0x00000010  // SSI0 Clock Gating Control
-// #define SYSCTL_RCGC2_GPIOA      0x00000001  // port A Clock Gating Control
-
-// #define TFT_CS                  (*((volatile uint32_t *)0x40004020))
-// #define TFT_CS_LOW              0           // CS normally controlled by hardware
-// #define TFT_CS_HIGH             0x08
-// #define DC                      (*((volatile uint32_t *)0x40004100))
-// #define DC_COMMAND              0
-// #define DC_DATA                 0x40
-// #define RESET                   (*((volatile uint32_t *)0x40004200))
-// #define RESET_LOW               0
-// #define RESET_HIGH              0x80
-
-// #define DELAY 0x80
-
-// static uint8_t ColStart, RowStart; // some displays need this changed
-
-// static int16_t _width = ILI9341_TFTWIDTH;   // this could probably be a constant, except it is used in Adafruit_GFX and depends on image rotation
-// static int16_t _height = ILI9341_TFTHEIGHT;
-
-// static const uint8_t initcmd[] = {
-//   0xEF, 3, 0x03, 0x80, 0x02,
-//   0xCF, 3, 0x00, 0xC1, 0x30,
-//   0xED, 4, 0x64, 0x03, 0x12, 0x81,
-//   0xE8, 3, 0x85, 0x00, 0x78,
-//   0xCB, 5, 0x39, 0x2C, 0x00, 0x34, 0x02,
-//   0xF7, 1, 0x20,
-//   0xEA, 2, 0x00, 0x00,
-//   ILI9341_PWCTR1  , 1, 0x23,             // Power control VRH[5:0]
-//   ILI9341_PWCTR2  , 1, 0x10,             // Power control SAP[2:0];BT[3:0]
-//   ILI9341_VMCTR1  , 2, 0x3e, 0x28,       // VCM control
-//   ILI9341_VMCTR2  , 1, 0x86,             // VCM control2
-//   ILI9341_MADCTL  , 1, 0x48,             // Memory Access Control
-//   ILI9341_VSCRSADD, 1, 0x00,             // Vertical scroll zero
-//   ILI9341_PIXFMT  , 1, 0x55,
-//   ILI9341_FRMCTR1 , 2, 0x00, 0x18,
-//   ILI9341_DFUNCTR , 3, 0x08, 0x82, 0x27, // Display Function Control
-//   0xF2, 1, 0x00,                         // 3Gamma Function Disable
-//   ILI9341_GAMMASET , 1, 0x01,             // Gamma curve selected
-//   ILI9341_GMCTRP1 , 15, 0x0F, 0x31, 0x2B, 0x0C, 0x0E, 0x08, // Set Gamma
-//     0x4E, 0xF1, 0x37, 0x07, 0x10, 0x03, 0x0E, 0x09, 0x00,
-//   ILI9341_GMCTRN1 , 15, 0x00, 0x0E, 0x14, 0x03, 0x11, 0x07, // Set Gamma
-//     0x31, 0xC1, 0x48, 0x08, 0x0F, 0x0C, 0x31, 0x36, 0x0F,
-//   ILI9341_SLPOUT  , 0x80,                // Exit Sleep
-//   ILI9341_DISPON  , 0x80,                // Display on
-//   0x00                                   // End of list
-// };
-
-// void static writecommand(uint8_t c) {
-//                                         // wait until SSI0 not busy/transmit FIFO empty
-//   while((SSI0_SR_R&SSI_SR_BSY)==SSI_SR_BSY){};
-//   TFT_CS = TFT_CS_LOW;
-//   DC = DC_COMMAND;
-//   SSI0_DR_R = c;                        // data out
-//                                         // wait until SSI0 not busy/transmit FIFO empty
-//   while((SSI0_SR_R&SSI_SR_BSY)==SSI_SR_BSY){};
-// }
-
-// // Subroutine to wait 1 msec
-// // Inputs: None
-// // Outputs: None
-// // Notes: ...
-// void static Delay1ms(uint32_t n){uint32_t volatile time;
-//   while(n){
-//     time = 72724*2/91;  // 1msec, tuned at 80 MHz
-//     while(time){
-//       time--;
-//     }
-//     n--;
-//   }
-// }
-
-// // Companion code to the above tables.  Reads and issues
-// // a series of LCD commands stored in ROM byte array.
-
-// void static writedata(uint8_t c) {
-//   while((SSI0_SR_R&SSI_SR_TNF)==0){};   // wait until transmit FIFO not full
-//   DC = DC_DATA;
-//   SSI0_DR_R = c;                        // data out
-// }
-
-// void static commandList(const uint8_t *addr) {
-
-//   uint8_t numCommands, numArgs;
-//   uint16_t ms;
-
-//   numCommands = *(addr++);               // Number of commands to follow
-//   while(numCommands--) {                 // For each command...
-//     writecommand(*(addr++));             //   Read, issue command
-//     numArgs  = *(addr++);                //   Number of args to follow
-//     ms       = numArgs & DELAY;          //   If hibit set, delay follows args
-//     numArgs &= ~DELAY;                   //   Mask out delay bit
-//     while(numArgs--) {                   //   For each argument...
-//       writedata(*(addr++));              //     Read, issue argument
-//     }
-
-//     if(ms) {
-//       ms = *(addr++);             // Read post-command delay time (ms)
-//       if(ms == 255) ms = 500;     // If 255, delay for 500 ms
-//       Delay1ms(ms);
-//     }
-//   }
-// }
-
-
-// void static deselect(void) {
-//                                         // wait until SSI0 not busy/transmit FIFO empty
-//   while((SSI0_SR_R&SSI_SR_BSY)==SSI_SR_BSY){};
-//   TFT_CS = TFT_CS_HIGH;    
-// }
-
-
-
-
-// void ILI9341_init() {
-//     volatile uint32_t delay;
-//   ColStart  = RowStart = 0; // May be overridden in init func
-
-//   SYSCTL_RCGCSSI_R |= 0x01;  // activate SSI0
-//   SYSCTL_RCGCGPIO_R |= 0x01; // activate port A
-//   while((SYSCTL_PRGPIO_R&0x01)==0){}; // allow time for clock to start
-
-//   // toggle RST low to reset; CS low so it'll listen to us
-//   // SSI0Fss is temporarily used as GPIO
-//   GPIO_PORTA_DIR_R |= 0xC8;             // make PA3,6,7 out
-//   GPIO_PORTA_AFSEL_R &= ~0xC8;          // disable alt funct on PA3,6,7
-//   GPIO_PORTA_DEN_R |= 0xC8;             // enable digital I/O on PA3,6,7
-//                                         // configure PA3,6,7 as GPIO
-//   GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0x00FF0FFF)+0x00000000;
-//   GPIO_PORTA_AMSEL_R &= ~0xC8;          // disable analog functionality on PA3,6,7
-//   TFT_CS = TFT_CS_LOW;
-//   RESET = RESET_HIGH;
-//   Delay1ms(500);
-//   RESET = RESET_LOW;
-//   Delay1ms(500);
-//   RESET = RESET_HIGH;
-//   Delay1ms(500);
-
-//   // initialize SSI0
-//   GPIO_PORTA_AFSEL_R |= 0x2C;           // enable alt funct on PA2,3,5
-//   GPIO_PORTA_DEN_R |= 0x2C;             // enable digital I/O on PA2,3,5
-//                                         // configure PA2,3,5 as SSI
-//   GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFF0F00FF)+0x00202200;
-//   GPIO_PORTA_AMSEL_R &= ~0x2C;          // disable analog functionality on PA2,3,5
-//   SSI0_CR1_R &= ~SSI_CR1_SSE;           // disable SSI
-//   SSI0_CR1_R &= ~SSI_CR1_MS;            // master mode
-//                                         // configure for system clock/PLL baud clock source
-//   SSI0_CC_R = (SSI0_CC_R&~SSI_CC_CS_M)+SSI_CC_CS_SYSPLL;
-// //                                        // clock divider for 3.125 MHz SSIClk (50 MHz PIOSC/16)
-// //  SSI0_CPSR_R = (SSI0_CPSR_R&~SSI_CPSR_CPSDVSR_M)+16;
-//                                         // clock divider for 8 MHz SSIClk (80 MHz PLL/24)
-//                                         // SysClk/(CPSDVSR*(1+SCR))
-//                                         // 80/(10*(1+0)) = 8 MHz (slower than 4 MHz)
-//   SSI0_CPSR_R = (SSI0_CPSR_R&~SSI_CPSR_CPSDVSR_M)+10; // must be even number
-//   SSI0_CR0_R &= ~(SSI_CR0_SCR_M |       // SCR = 0 (8 Mbps data rate)
-//                   SSI_CR0_SPH |         // SPH = 0
-//                   SSI_CR0_SPO);         // SPO = 0
-//                                         // FRF = Freescale format
-//   SSI0_CR0_R = (SSI0_CR0_R&~SSI_CR0_FRF_M)+SSI_CR0_FRF_MOTO;
-//                                         // DSS = 8-bit data
-//   SSI0_CR0_R = (SSI0_CR0_R&~SSI_CR0_DSS_M)+SSI_CR0_DSS_;
-//   SSI0_CR1_R |= SSI_CR1_SSE;            // enable SSI
-
-//   commandList(initcmd);
-// }
-
-// void static setAddrWindowILI9341(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
-//      if ((x0 > x1) || (x1 > ILI9341_TFTWIDTH) ||
-//       (y0 > y1) || (y1 > ILI9341_TFTHEIGHT)) 
-//   { 
-//     // out of range
-//     return ILI9341_ERROR;
-//   }  
-
-//   // set column
-//   ILI9341_TransmitCmmd(ILI9341_CASET);
-//   // set column -> set column
-//   ILI9341_Transmit32bitData(((uint32_t) xs << 16) | xe);
-//   // set page
-//   ILI9341_TransmitCmmd(ILI9341_PASET);
-//   // set page -> high byte first
-//   ILI9341_Transmit32bitData(((uint32_t) ys << 16) | ye);
-//   // success
-// }
-// void ILI9341_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
-//   uint8_t hi = color >> 8, lo = color;
-
-//   // rudimentary clipping (drawChar w/big text requires this)
-//   if((x >= _width) || (y >= _height)) return;
-//   if((x + w - 1) >= _width)  w = _width  - x;
-//   if((y + h - 1) >= _height) h = _height - y;
-
-//   setAddrWindowILI9341(x, y, x+w-1, y+h-1);
-
-//   for(y=h; y>0; y--) {
-//     for(x=w; x>0; x--) {
-//       writedata(hi);
-//       writedata(lo);
-//     }
-//   }
-
-//   deselect();
-// }

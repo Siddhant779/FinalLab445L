@@ -89,7 +89,7 @@ int main(void) {
 	
 	//ST7735_InitR(INITR_REDTAB);     // Start up display.
     ILI9341_init();
-	setRotation(1);
+	//setRotation(1);
 
     /* Start RGB flashing. WARNING! BRIGHT FLASHING COLORS. DO NOT RUN IF YOU HAVE EPILEPSY. */
     RGBInit();
@@ -103,15 +103,13 @@ int main(void) {
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
     ILI9341_fillScreen(ILI9341_BLACK);
-    //x is up to 320 and y is up to 240
-		
-    ILI9341_drawPixel(0,0,0x03E0);
-    ILI9341_drawPixel(10,15,0x03E0);
-    ILI9341_drawPixel(11,15,0x03E0);
-	ILI9341_drawPixel(12,15,0x03E0);
-    ILI9341_drawVLine(12,30,40, 0x03E0);
-    ILI9341_DrawCharS(20,20,'C',ILI9341_GREEN, ILI9341_BLACK,1);
-    ILI9341_drawPixel(220,310,0x03E0);
+    //x is up to 320 and y is up to 240 - for drawing pixel
+	
+    ILI9341_OutStringSize("Song 1:hello by TPOD gang\n""Song 2\n", 2);
+		ILI9341_OutStringSize("Song 1\n""Song 2", 1);
+
+
+    //ILI9341_drawPixel(310,220,0x03E0);
     // int32_t arrDis[256];
     // for(int i = 0; i < 256; i++) {
     //     arrDis[i] = i;
