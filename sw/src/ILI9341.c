@@ -13,27 +13,14 @@
  *                         SCK: PA2
  *                        MOSI: PA5
  *                          DC: PA6
- *                       RESET: PE5
+ *                       RESET: PA7
  *                          CS: PA3
  *                         GND: GND
- *                         VCC: 3.3V
+ *                         VCC:  3.3V
 
  */
  
- 
 
-// //use Port A for display 
-// // use port B for touchscreen and sd card 
-// // PB0 - SD card cs PB1 touchscreen cs PB2 touchIRQ PB4 - clk  - on the discord 
-// // MISO ---->> unconnected
-// // LED  ---->>  3V
-// // SCK ---->>  PA2
-// // MOSI ---->> PA5
-// // DC ---->>  PA6
-// // RESET ---->> PA7
-// // CS ----> unconnected 
-// // GND ---->> GND
-// // VCC ---->> 3V
 
 
 #include "ILI9341.h"
@@ -53,7 +40,7 @@
 #define DC                      (*((volatile uint32_t *)0x40004100))
 #define DC_COMMAND              0
 #define DC_DATA                 0x40
-#define RESET                   (*((volatile uint32_t *)0x40024000))
+#define RESET                   (*((volatile uint32_t *)0x40004200))
 #define RESET_LOW               0
 #define RESET_HIGH              0x20
 
@@ -696,7 +683,7 @@ uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor,
   uint32_t count = 0;
   if(y>22) return 0;
   while(*pt){
-    ILI9341_DrawCharS(x*6, y*10, *pt, textColor, ST7735_BLACK, 1);
+    ILI9341_DrawCharS(x*6, y*10, *pt, textColor, ILI9341_BLACK, 1);
     pt++;
     x = x-size;
     if(x < 0) return count;  // number of characters printed

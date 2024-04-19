@@ -514,14 +514,49 @@
               <FilePath>..\lib\RGB\RGB.c</FilePath>
             </File>
             <File>
+              <FileName>eDisk.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\lib\SD\eDisk.h</FilePath>
+            </File>
+            <File>
+              <FileName>ff.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\lib\SD\ff.h</FilePath>
+            </File>
+            <File>
+              <FileName>ffconf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\lib\SD\ffconf.h</FilePath>
+            </File>
+            <File>
+              <FileName>integer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\lib\SD\integer.h</FilePath>
+            </File>
+            <File>
+              <FileName>eDisk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\SD\eDisk.c</FilePath>
+            </File>
+            <File>
+              <FileName>eFile.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\SD\eFile.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\SD\ff.c</FilePath>
+            </File>
+            <File>
               <FileName>SD.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\lib\SD.c</FilePath>
+              <FilePath>..\lib\SD\SD.c</FilePath>
             </File>
             <File>
               <FileName>SD.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\lib\SD.h</FilePath>
+              <FilePath>..\lib\SD\SD.h</FilePath>
             </File>
           </Files>
         </Group>

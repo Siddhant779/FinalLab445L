@@ -41,9 +41,9 @@ void SD_initSDCard(void){
   SYSCTL_RCGCGPIO_R |= 0x02;            // activate clock for Port B
   while((SYSCTL_PRGPIO_R&0x02) == 0){}; // allow time for clock to stabilize
   GPIO_PORTB_AFSEL_R |= 0xD0;           // enable alt funct on PB4,7,6
-  GPIO_PORTA_PUR_R |= 0xD0;             // enable weak pullup on PB4,7,6
-  GPIO_PORTA_DEN_R |= 0xD0;             // enable digital I/O on PB4,7,6
-  GPIO_PORTA_AMSEL_R &= ~0xD0;          // disable analog functionality on PA2,3,4,5
+  GPIO_PORTB_PUR_R |= 0xD0;             // enable weak pullup on PB4,7,6
+  GPIO_PORTB_DEN_R |= 0xD0;             // enable digital I/O on PB4,7,6
+  GPIO_PORTB_AMSEL_R &= ~0xD0;          // disable analog functionality on PA2,3,4,5
 
   SYSCTL_RCGCSSI_R |= 0x04;             // activate clock for SSI2
   while((SYSCTL_PRSSI_R&0x4) == 0){};  // allow time for clock to stabilize

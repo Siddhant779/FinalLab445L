@@ -46,9 +46,9 @@
 // CS   - PA3 TFT_CS, active low to enable TFT
 // *CS  - PD7/PB0 SDC_CS, active low to enable SDC
 // MISO - PA4 MISO SPI data from SDC to microcontroller
-// SDA  – (NC) I2C data for ADXL345 accelerometer
-// SCL  – (NC) I2C clock for ADXL345 accelerometer
-// SDO  – (NC) I2C alternate address for ADXL345 accelerometer
+// SDA  ï¿½ (NC) I2C data for ADXL345 accelerometer
+// SCL  ï¿½ (NC) I2C clock for ADXL345 accelerometer
+// SDO  ï¿½ (NC) I2C alternate address for ADXL345 accelerometer
 // Backlight + - Light, backlight connected to +3.3 V
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
@@ -99,7 +99,7 @@ void CS_Init(void){
 }
 #endif
 
-//********SSI0_Init*****************
+//********SSI2_Init*****************
 // Initialize SSI0 interface to SDC
 // inputs:  clock divider to set clock frequency
 // outputs: none
@@ -108,7 +108,7 @@ void CS_Init(void){
 // 200 for    400,000 bps slow mode, used during initialization
 // 8   for 10,000,000 bps fast mode, used during disk I/O
 //void Timer5_Init(void);
-void SSI0_Init(unsigned long CPSDVSR){
+void SSI2_Init(unsigned long CPSDVSR){
   SYSCTL_RCGCSSI_R |= 0x01;    // activate SSI0
 //  Timer5_Init();
   CS_Init();                            // initialize whichever GPIO pin is CS for the SD card

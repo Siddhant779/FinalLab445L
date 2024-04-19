@@ -4,14 +4,14 @@
 // Andreas Gerstlauer 2/27/20
 #include <stdint.h>
 #include <string.h>
-#include "../RTOS_Labs_common/OS.h"
-#include "../RTOS_Labs_common/eFile.h"
+//#include "../RTOS_Labs_common/OS.h"
+//#include "eFile.h"
 #include "ff.h"
 #include <stdio.h>
 
 
 // Display semaphore
-extern Sema4Type LCDFree;  // this should really be handled in eDisk.c, not eFile.c
+//extern Sema4Type LCDFree;  // this should really be handled in eDisk.c, not eFile.c
 
 // Static file system objects
 static FATFS g_sFatFs;

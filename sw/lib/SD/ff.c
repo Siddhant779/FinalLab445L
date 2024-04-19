@@ -122,7 +122,7 @@
 /---------------------------------------------------------------------------*/
 
 #include "ff.h"      /* Declarations of FatFs API */
-#include "../RTOS_Labs_common/eDisk.h"
+#include "eDisk.h"
 
 
 
