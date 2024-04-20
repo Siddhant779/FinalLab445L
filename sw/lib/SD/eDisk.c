@@ -53,6 +53,8 @@
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "eDisk.h"
+#include "./src/ILI9341.h"
+#include "../inc/ST7735.h"
 
 // these defines are in two places, here and in ST7735.c
 #define SDC_CS_PB0 1
@@ -121,11 +123,17 @@ void SSI2_Init(unsigned long CPSDVSR){
   GPIO_PORTB_DR4R_R |= 0xF1;            // 4mA drive on outputs
   GPIO_PORTB_PUR_R |= 0xD0;             // enable weak pullup on PB4,7,6
   GPIO_PORTB_DEN_R |= 0xD0;             // enable digital I/O on PB4,7,6
-
-                                        // configure PA2,4,5 as SSI
-  GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFF00F0FF)+0x00220200; // NEED TO CHECK WHAT HIS IS 
+/*
+ *  SD_SCK: PB4           T_CS: -
+ * SD_MISO: PB6          T_CLK: -
+ * SD_MOSI: PB7           MISO: -
+ *   SD_CS: PB0 
+            
+            */                            // configure PA2,4,5 as SSI
+            // look at page 72 for PCTL stuff 
+  GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xFF00F0FF)+0x00220200; // NEED TO CHECK WHAT HIS IS 
                                         // configure PA3 as GPIO
-  GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFFFF0FFF)+0x00000000;
+  GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xFFFF0FFF)+0x00000000;
 
   GPIO_PORTB_AMSEL_R &= ~0xD0;          // disable analog functionality on PB467
   //GPIO_PORTA_DATA_R |= 0x88;            // PA7, PA3 high (disable LCD) - dont need this 
@@ -229,12 +237,14 @@ static BYTE CardType;      /* Card type flags */
 /* SPI controls (Platform dependent)                                     */
 /*-----------------------------------------------------------------------*/
 
+
 /* Initialize MMC interface */
 static void init_spi(void){
   SPIxENABLE();    /* Enable SPI function */
   CS_HIGH();       /* Set CS# high */
 
-  for (Timer1 = 10; Timer1; ) ;  /* 10ms */
+  Delay1ms(10);
+  //for (Timer1 = 10; Timer1; ) ;  /* 10ms */
 }
 
 
