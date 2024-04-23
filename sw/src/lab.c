@@ -61,6 +61,7 @@ controls file - buttons deals with that
 #include "Music.h"
 #include "../lib/SD/eDisk.h"
 #include "../lib/SD/ff.h"
+#include "Messages.h"
 // port b 6
 
 /** MMAP Pin definitions. */
@@ -508,7 +509,7 @@ int main(void) {
 
     /* Initialize all ports. */
     Unified_Port_Init();
-	  SSI2_Init(4);
+	  //SSI2_Init(4);
 	//ST7735_InitR(INITR_REDTAB);     // Start up display.
     ILI9341_init();
 	//setRotation(1);
@@ -520,7 +521,7 @@ int main(void) {
 		switch_init();
 	
 		/* Initialize music driver */
-		music_init();
+		//music_init();
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
@@ -529,29 +530,29 @@ int main(void) {
 	
     // ILI9341_OutStringSize("Song 1:hello by TPOD gang\n""Song 2\n", 2);
 	//   ILI9341_OutStringSize("Song 1\n""Song 2", 1);
-	  uint8_t c, x, y;
-		UINT successfulreads, successfulwrites;
-    //ILI9341_DrawBitmap(200,150,clock, 80, 80);
-   front8 = Buf2; // buffer being output to DAC
-  back8 = Buf;   // buffer being written to from SDC
-  Count8 = 0;
-  flag8 = 1; // 1 means need data into back
-  BufCount8 = 0;
-  done_song = 0;
-  stop_dac = 0;
-    ILI9341_SetCursor(50,6);
-    ILI9341_OutStringSize("testing color",ILI9341_LIGHTGREEN, 2);
-    MountFresult = f_mount(&g_sFatFs, "", 0);
-    if(MountFresult){
-        ILI9341_DrawString(52, 0, "f_mount error",0x03E0 , 2);
-    }
-    Fresult = f_open(&Handle2, LightsFilename, FA_READ);
-    if(Fresult){
-        ILI9341_DrawString(52, 0, "testFile error",0x03E0 , 2);
-    }
-		if(Fresult == FR_OK) {
-			ILI9341_DrawString(52, 0, "opened music file ",0x03E0 , 2);
-		}
+//	  uint8_t c, x, y;
+//		UINT successfulreads, successfulwrites;
+//    //ILI9341_DrawBitmap(200,150,clock, 80, 80);
+//   front8 = Buf2; // buffer being output to DAC
+//  back8 = Buf;   // buffer being written to from SDC
+//  Count8 = 0;
+//  flag8 = 1; // 1 means need data into back
+//  BufCount8 = 0;
+//  done_song = 0;
+//  stop_dac = 0;
+//    ILI9341_SetCursor(50,6);
+//    ILI9341_OutStringSize("testing color",ILI9341_LIGHTGREEN, 2);
+//    MountFresult = f_mount(&g_sFatFs, "", 0);
+//    if(MountFresult){
+//        ILI9341_DrawString(52, 0, "f_mount error",0x03E0 , 2);
+//    }
+//    Fresult = f_open(&Handle2, LightsFilename, FA_READ);
+//    if(Fresult){
+//        ILI9341_DrawString(52, 0, "testFile error",0x03E0 , 2);
+//    }
+//		if(Fresult == FR_OK) {
+//			ILI9341_DrawString(52, 0, "opened music file ",0x03E0 , 2);
+//		}
     // x = 300;
     // y = 150;
     // uint8_t *read_str;
@@ -603,7 +604,7 @@ int main(void) {
     UART_OutString(
         "ECE445L Final lab.\r\n"
         "Press SW1 to start.\r\n");
-    Pause();
+    //Pause();
 
     /* Stop RGB and turn off any on LEDs. */
     RGBStop();
@@ -616,9 +617,9 @@ int main(void) {
     //ST7735_SetCursor(0, 0);
     //ST7735_OutString("Starting...\n");
     UART_OutString("Starting...\r\n");
-		
+		displayKeys();
 		//load_song(TakeFive, 79749);
-		unpause_song();
+		//unpause_song();
     while (1) {
 			/* TODO: Write your code here! */
 			//DelayWait10ms(50);

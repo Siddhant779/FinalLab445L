@@ -588,6 +588,16 @@
               <FileType>1</FileType>
               <FilePath>.\ILI9341.c</FilePath>
             </File>
+            <File>
+              <FileName>Messages.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Messages.c</FilePath>
+            </File>
+            <File>
+              <FileName>Messages.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Messages.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
