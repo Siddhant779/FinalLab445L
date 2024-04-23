@@ -16,6 +16,17 @@ uint16_t Volume;
 uint16_t DacData;
 
 
+
+uint8_t Buf[BUFSIZE8];
+uint8_t Buf2[BUFSIZE8];
+uint32_t Count8;
+uint8_t *front8; // buffer being output to DAC
+uint8_t *back8;  // buffer being loaded from SDC
+int flag8; // 1 means need data into back
+uint32_t BufCount8; // 0 to NUMBUF8-1
+uint8_t done_song;
+uint8_t stop_dac;
+
 void adc_init(void);
 void send_to_dac(void);
 void update_volume(void);
@@ -30,16 +41,39 @@ void music_init(void) {
 }
 
 void send_to_dac(void) {
-	if(SongIndex < SongLength) {
-		DacData = (SongArray[SongIndex]*Volume)/2000;
-		dac_output(DacData);
-		SongIndex++;
+	// if(SongIndex < SongLength) {
+	// 	DacData = (SongArray[SongIndex]*Volume)/2000;
+	// 	dac_output(DacData);
+	// 	SongIndex++;
+	// }
+	// else {
+	// 	Timer2A_Stop();
+	// 	SongIndex = 0;
+	// 	// TO-DO: Handle case for when the song ends
+	// }
+	if(stop_dac == 0) {
+		uint16_t data = front8[Count8]<<4; // shifted into MSbits
+		dac_output((data*Volume)/2000); // 12 bit
 	}
-	else {
-		Timer2A_Stop();
-		SongIndex = 0;
-		// TO-DO: Handle case for when the song ends
-	}
+	Count8++;
+ 	if(Count8 == BUFSIZE8){
+		if(done_song) {
+			pause_song();
+			done_song = 0;
+			flag8 = 0;
+			stop_dac = 1;
+		}
+		else {
+			uint8_t *pt = front8;
+			front8 = back8;
+			back8 = pt; // swap buffers
+			flag8 = 1;  // need more data
+			stop_dac = 0;
+		}
+		Count8 = 0;
+  }
+		
+
 }
 
 void load_song(const uint16_t* song, uint32_t length) {

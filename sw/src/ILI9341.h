@@ -211,6 +211,7 @@ extern void ILI9341_SetCursor(uint32_t newX, uint32_t newY);
 
 extern void setRotation(uint8_t m);
 
+extern void ILI9341_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
 
 
 

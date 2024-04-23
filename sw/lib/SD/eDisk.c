@@ -131,9 +131,9 @@ void SSI2_Init(unsigned long CPSDVSR){
             
             */                            // configure PA2,4,5 as SSI
             // look at page 72 for PCTL stuff 
-  GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xFF00F0FF)+0x00220200; // NEED TO CHECK WHAT HIS IS 
                                         // configure PA3 as GPIO
-  GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xFFFF0FFF)+0x00000000;
+	GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0x00F0FFFF)+0x22020000;
+	GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xFFFFFFF0)+0x00000000;
 
   GPIO_PORTB_AMSEL_R &= ~0xD0;          // disable analog functionality on PB467
   //GPIO_PORTA_DATA_R |= 0x88;            // PA7, PA3 high (disable LCD) - dont need this 

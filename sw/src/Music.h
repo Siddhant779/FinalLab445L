@@ -7,6 +7,18 @@
 extern uint16_t Volume;
 extern uint16_t DacData;
 
+#define BUFSIZE8 512
+extern uint8_t Buf[BUFSIZE8];
+extern uint8_t Buf2[BUFSIZE8];
+extern uint32_t Count8;
+extern uint8_t *front8; // buffer being output to DAC
+extern uint8_t *back8;  // buffer being loaded from SDC
+extern int flag8; // 1 means need data into back
+#define NUMBUF8 (2241504/BUFSIZE8)
+extern uint32_t BufCount8; // 0 to NUMBUF8-1
+extern uint8_t done_song;
+extern uint8_t stop_dac;
+
 // Initialize music driver
 void music_init(void);
 
