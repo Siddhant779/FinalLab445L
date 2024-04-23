@@ -121,6 +121,7 @@ void GPIOPortF_Handler(void) {
 	if(LastEnter) {
 		// Service enter button
 		input_encoder = 5;
+		append_message();//REPLACE WITH FSM AT SOME POINT
 	}
 	Timer1Arm();
 }

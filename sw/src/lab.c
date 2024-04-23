@@ -620,6 +620,7 @@ int main(void) {
 		
 		//load_song(TakeFive, 79749);
 		//unpause_song();
+		message_init();
     while (1) {
 			/* TODO: Write your code here! */
 			//DelayWait10ms(50);
