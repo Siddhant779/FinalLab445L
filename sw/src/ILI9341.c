@@ -66,8 +66,7 @@ static int16_t _height = ILI9341_TFTHEIGHT;
 
 uint32_t Xcord=52; // position along the horizonal axis 0 to 52
 uint32_t Ycord=0; // position along the vertical axis 0 to 22
-uint16_t TextColor = 0x03E0;
-
+uint32_t bgColorChange = ILI9341_WHITE;
 
 static const uint8_t Font[] = {
   0x00, 0x00, 0x00, 0x00, 0x00,
@@ -707,7 +706,7 @@ void ILI9341_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, 
 }
 
 
-void ILI9341_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t bgColor, uint8_t size){
+void ILI9341_DrawCharS(int16_t x, int16_t y, char c, uint32_t textColor, uint32_t bgColor, uint8_t size){
   uint8_t line; // vertical column of pixels of character in font
   int32_t i, j;
   if((x >= _width)            || // Clip right
@@ -732,14 +731,14 @@ void ILI9341_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t 
           ILI9341_fillRect(x-(i*size), y+(j*size), size, size, textColor);
           //ST7735_FillRect(x+(i*size), y+(j*size), size, size, textColor);
         }
-      } else if (bgColor != textColor) {
+      } else if (bgColorChange != textColor) {
         if (size == 1) // default size
           //ILI9341_drawPixel(y-j, x-i, bgColor);
-          ILI9341_drawPixel(x-i, y+j, bgColor);
+          ILI9341_drawPixel(x-i, y+j, bgColorChange);
           //ST7735_DrawPixel(x+i, y+j, bgColor);
         else {  // big size
           //ILI9341_fillRect(y-j*size, x-i*size, size, size, bgColor);
-          ILI9341_fillRect(x-(i*size), y+(j*size), size, size, bgColor);
+          ILI9341_fillRect(x-(i*size), y+(j*size), size, size, bgColorChange);
           //ST7735_FillRect(x+i*size, y+j*size, size, size, bgColor);
         }
       }
@@ -748,7 +747,7 @@ void ILI9341_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t 
   }
 }
 
-uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor, uint8_t size){
+uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, uint32_t textColor, uint8_t size){
   uint32_t count = 0;
   if(y>22) return 0;
   while(*pt){
@@ -762,32 +761,36 @@ uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor,
 }
 
 
-void ILI9341_OutChar(char ch, uint8_t size, int16_t textColor){
+void ILI9341_OutChar(char ch, uint8_t size, uint32_t textColor){
   if((ch == 10) || (ch == 13) || (ch == 27)){
     Ycord+=size; Xcord=52;
     if(Ycord>22){
       Ycord = 0;
     }
-    ILI9341_DrawString(0,Ycord,"                     ",TextColor, size);
+    ILI9341_DrawString(0,Ycord,"                     ",textColor, size);
     return;
   }
-  ILI9341_DrawCharS(Xcord*6,Ycord*10,ch,textColor,ILI9341_BLACK, size);
+  ILI9341_DrawCharS(Xcord*6,Ycord*10,ch,textColor,bgColorChange, size);
   Xcord-=size;
   if(Xcord < 0){
     Xcord = 0;
-    ILI9341_DrawCharS(Xcord*6,Ycord*10,'*',textColor,ILI9341_BLACK, size);
+    ILI9341_DrawCharS(Xcord*6,Ycord*10,'*',textColor,bgColorChange, size);
   }
   return;
 }
 
-void ILI9341_OutString(char *ptr, int16_t textColor){
+void ILI9341_OutString(char *ptr, uint32_t textColor){
   while(*ptr){
     ILI9341_OutChar(*ptr, 1, textColor);
     ptr = ptr + 1;
   }
 }
 
-void ILI9341_OutStringSize(char *ptr, int16_t textColor, uint8_t size){
+void ILI9341_setBGColor(uint32_t bgColor) {
+  bgColorChange = bgColor;
+}
+
+void ILI9341_OutStringSize(char *ptr, uint32_t textColor, uint8_t size){
   while(*ptr){
     ILI9341_OutChar(*ptr, size, textColor);
     ptr = ptr + 1;
@@ -837,8 +840,3 @@ void setRotation(uint8_t m) {
     break;
   }
 }
-
-
-
-
-

@@ -77,20 +77,17 @@
 #define ILI9341_TFTHEIGHT     240
 
 
-// Color definitions
-#define ILI9341_BLACK 0x0000       ///<   0,   0,   0
-#define ILI9341_NAVY 0x000F        ///<   0,   0, 123
-#define ILI9341_DARKBLUE 0x03E0   ///<   0, 125,   0
-#define ILI9341_MIDBLUE 0x03EF    ///<   0, 125, 123
-#define ILI9341_GREEN 0x7800      ///< 123,   0,   0
-#define ILI9341_LIGHTBLUE 0x7BE0       ///< 123, 125,   0
-#define ILI9341_NAVYBLUE 0x001F        ///<   0,   0, 255
-// #define ILI9341_UNKNOWN 0x07E0       ///<   0, 255,   0
-// #define ILI9341_CYAN 0x07FF        ///<   0, 255, 255
-#define ILI9341_LIGHTGREEN 0xF800         ///< 255,   0,   0
-#define ILI9341_SKYBLUE 0xFFE0      ///< 255, 255,   0 - SKYBLUE
-#define ILI9341_TEST 0xFFFF      ///< 255, 255,   0 - SKYBLUE
-
+#define ILI9341_BLACK     0x00000000  // Black
+#define ILI9341_WHITE     0x00FFFFFF  // White
+#define ILI9341_RED       0x00FF0000  // Red
+#define ILI9341_GREEN     0x0000FF00  // Green
+#define ILI9341_BLUE      0x000000FF  // Blue
+#define ILI9341_CYAN      0x0000FFFF  // Cyan
+#define ILI9341_MAGENTA   0x00FF00FF  // Magenta
+#define ILI9341_YELLOW    0x00FFFF00  // Yellow
+#define ILI9341_GRAY      0x007F7F7F  // Gray
+#define ILI9341_LIGHTGRAY 0x00C0C0C0  // Light Gray
+#define ILI9341_DARKGRAY  0x00303030  // Dark Gray
 
 
 
@@ -196,15 +193,15 @@ extern void ILI9341_softwareReset(void);
 
 extern void commandList(const uint8_t *addr);
 
-extern void ILI9341_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t bgColor, uint8_t size);
+extern void ILI9341_DrawCharS(int16_t x, int16_t y, char c, uint32_t textColor, uint32_t bgColor, uint8_t size);
 
-extern uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor, uint8_t size); 
+extern uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, uint32_t textColor, uint8_t size); 
 
-extern void ILI9341_OutChar(char ch, uint8_t size, int16_t textColor);
+extern void ILI9341_OutChar(char ch, uint8_t size, uint32_t textColor);
 
-extern void ILI9341_OutString(char *ptr, int16_t textColor);
+extern void ILI9341_OutString(char *ptr, uint32_t textColor);
 
-extern void ILI9341_OutStringSize(char *ptr, int16_t textColor, uint8_t size);
+extern void ILI9341_OutStringSize(char *ptr, uint32_t textColor, uint8_t size);
 
 
 extern void ILI9341_SetCursor(uint32_t newX, uint32_t newY);
@@ -213,7 +210,7 @@ extern void setRotation(uint8_t m);
 
 extern void ILI9341_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
 
-
+extern void ILI9341_setBGColor(uint32_t bgColor);
 
 
 

@@ -13,8 +13,8 @@ void displayKeys(void){
 	ILI9341_SetCursor(x, y);
 	for(int i = 0; i < 4; i++){
 		for (int j = 0; j < 10; j++){
-			ILI9341_OutChar(keys[i][j], 1, ILI9341_SKYBLUE);
-			ILI9341_OutChar(' ', 1, ILI9341_SKYBLUE);
+			ILI9341_OutChar(keys[i][j], 1, ILI9341_WHITE);
+			ILI9341_OutChar(' ', 1, ILI9341_WHITE);
 		}
 		y += 1;
 		ILI9341_SetCursor(x, y);
