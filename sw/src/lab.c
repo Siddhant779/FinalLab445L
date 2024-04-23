@@ -524,7 +524,7 @@ int main(void) {
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
-    ILI9341_fillScreen(ILI9341_BLACK);
+    ILI9341_fillScreen(ILI9341_WHITE);
     //x is up to 320 and y is up to 240 - for drawing pixel
 	
     // ILI9341_OutStringSize("Song 1:hello by TPOD gang\n""Song 2\n", 2);
@@ -540,7 +540,7 @@ int main(void) {
   done_song = 0;
   stop_dac = 0;
     ILI9341_SetCursor(50,6);
-    ILI9341_OutStringSize("testing color",ILI9341_LIGHTGREEN, 2);
+    ILI9341_OutStringSize("testing color",ILI9341_BLACK, 2);
     MountFresult = f_mount(&g_sFatFs, "", 0);
     if(MountFresult){
         ILI9341_DrawString(52, 0, "f_mount error",0x03E0 , 2);
