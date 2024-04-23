@@ -13,4 +13,6 @@
 // Initializes PC4,5,6,7 and PF4 as edge-triggered switches
 void switch_init(void);
 
+uint8_t get_input(void);
+
 

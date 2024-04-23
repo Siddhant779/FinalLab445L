@@ -7,4 +7,7 @@ typedef struct coord{
 	uint8_t y;
 }coord_t;
 
-void displayKeys(void);
+void display_keys(void);
+
+void change_coords(int x, int y);
+void move_coords(uint8_t input);

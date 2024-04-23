@@ -525,7 +525,7 @@ int main(void) {
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
-    ILI9341_fillScreen(ILI9341_BLACK);
+    ILI9341_fillScreen(ILI9341_WHITE);
     //x is up to 320 and y is up to 240 - for drawing pixel
 	
     // ILI9341_OutStringSize("Song 1:hello by TPOD gang\n""Song 2\n", 2);
@@ -617,13 +617,14 @@ int main(void) {
     //ST7735_SetCursor(0, 0);
     //ST7735_OutString("Starting...\n");
     UART_OutString("Starting...\r\n");
-		displayKeys();
+		
 		//load_song(TakeFive, 79749);
 		//unpause_song();
     while (1) {
 			/* TODO: Write your code here! */
 			//DelayWait10ms(50);
 			//printf("DacOut: %u\n", DacData);
+			display_keys();
     }
     return 1;
 }
