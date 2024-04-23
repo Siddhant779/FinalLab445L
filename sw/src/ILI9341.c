@@ -64,7 +64,7 @@ static uint8_t rotation;           // 0 to 3
 static int16_t _width = ILI9341_TFTWIDTH;   // this could probably be a constant, except it is used in Adafruit_GFX and depends on image rotation
 static int16_t _height = ILI9341_TFTHEIGHT;
 
-uint32_t Xcord=52; // position along the horizonal axis 0 to 52
+uint32_t Xcord=53; // position along the horizonal axis 0 to 52
 uint32_t Ycord=0; // position along the vertical axis 0 to 22
 uint32_t bgColorChange = ILI9341_WHITE;
 
@@ -678,7 +678,7 @@ void endSPITransaction(void) {
 // Output: none
 // Must be less than or equal to 128 pixels wide by 160 pixels high
 //FOR ILI THE X IS THE RIGHT SIDE AND THE Y IS THE BOTTOM PART OF IT 
-void ILI9341_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h){
+void ILI9341_DrawBitmap(uint16_t x, uint16_t y, const uint16_t *image, uint16_t w, uint16_t h){
   int16_t skipC = 0;                      // non-zero if columns need to be skipped due to clipping
   int16_t originalWidth = w;              // save this value; even if not all columns fit on the screen, the image is still this width in ROM
   int i = w*(h - 1);
@@ -730,7 +730,7 @@ void ILI9341_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, 
 }
 
 
-void ILI9341_DrawCharS(int16_t x, int16_t y, char c, uint32_t textColor, uint32_t bgColor, uint8_t size){
+void ILI9341_DrawCharS(uint16_t x, uint16_t y, char c, uint32_t textColor, uint32_t bgColor, uint8_t size){
   uint8_t line; // vertical column of pixels of character in font
   int32_t i, j;
   if((x >= _width)            || // Clip right
@@ -773,11 +773,24 @@ void ILI9341_DrawCharS(int16_t x, int16_t y, char c, uint32_t textColor, uint32_
 
 uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, uint32_t textColor, uint8_t size){
   uint32_t count = 0;
-  if(y>22) return 0;
+  if(y>24) return 0;
   while(*pt){
-    ILI9341_DrawCharS(x*6, y*10, *pt, textColor, ILI9341_BLACK, 1);
+    ILI9341_DrawCharS(x*6, y*10, *pt, textColor, ILI9341_BLACK, size);
     pt++;
     x = x-size;
+    if(x < 0) return count;  // number of characters printed
+    count++;
+  }
+  return count;  // number of characters printed
+}
+
+uint32_t ILI9341_DrawStringCord(uint16_t x, uint16_t y, char *pt, uint32_t textColor, uint8_t size){
+  uint32_t count = 0;
+  if(y>240) return 0;
+  while(*pt){
+    ILI9341_DrawCharS(x, y, *pt, textColor, ILI9341_BLACK, size);
+    pt++;
+    x = x-(size*6);
     if(x < 0) return count;  // number of characters printed
     count++;
   }
@@ -788,7 +801,7 @@ uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, uint32_t textColor
 void ILI9341_OutChar(char ch, uint8_t size, uint32_t textColor){
   if((ch == 10) || (ch == 13) || (ch == 27)){
     Ycord+=size; Xcord=52;
-    if(Ycord>22){
+    if(Ycord>24){
       Ycord = 0;
     }
     ILI9341_DrawString(0,Ycord,"                     ",textColor, size);
@@ -822,7 +835,7 @@ void ILI9341_OutStringSize(char *ptr, uint32_t textColor, uint8_t size){
 }
 
 void ILI9341_SetCursor(uint32_t newX, uint32_t newY){
-  if((newX > 52) || (newY > 22)){       // bad input
+  if((newX > 53) || (newY > 24)){       // bad input
     return;                             // do nothing
   }
   Xcord = newX;

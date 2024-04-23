@@ -193,7 +193,7 @@ extern void ILI9341_softwareReset(void);
 
 extern void commandList(const uint8_t *addr);
 
-extern void ILI9341_DrawCharS(int16_t x, int16_t y, char c, uint32_t textColor, uint32_t bgColor, uint8_t size);
+extern void ILI9341_DrawCharS(uint16_t x, uint16_t y, char c, uint32_t textColor, uint32_t bgColor, uint8_t size);
 
 extern uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, uint32_t textColor, uint8_t size); 
 
@@ -208,12 +208,13 @@ extern void ILI9341_SetCursor(uint32_t newX, uint32_t newY);
 
 extern void setRotation(uint8_t m);
 
-extern void ILI9341_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
+extern void ILI9341_DrawBitmap(uint16_t x, uint16_t y, const uint16_t *image, uint16_t w, uint16_t h);
 
 extern void ILI9341_setBGColor(uint32_t bgColor);
 
 extern void ILI9341_drawHLineOtherWay(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb, uint8_t width);
 
+extern uint32_t ILI9341_DrawStringCord(uint16_t x, uint16_t y, char *pt, uint32_t textColor, uint8_t size);
 
 
 

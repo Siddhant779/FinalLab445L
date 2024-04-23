@@ -19,6 +19,19 @@ extern uint32_t BufCount8; // 0 to NUMBUF8-1
 extern uint8_t done_song;
 extern uint8_t stop_dac;
 
+
+typedef struct Music{
+    char *album_file; // name of the file to read from sd card for album bitmap image
+    char *song_file; // name of the file to read from sd card for song 
+    char *song_name; // name of song
+    char *artist_name; // name of artist
+    char *album_name; // name of album
+
+    uint32_t byte_size; // size of the song
+
+} Music;
+
+
 // Initialize music driver
 void music_init(void);
 

@@ -1036,62 +1036,165 @@ int main(void) {
 		UINT successfulreads, successfulwrites;
 
 
-// this is for now playing page 
-    // ILI9341_DrawBitmap(100,160,weeknd, 120, 120);
+// this is for settings page 
+    ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
+    ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
+    ILI9341_drawHLine(0, 12, 320, ILI9341_BLACK, 2);
+    
+    ILI9341_SetCursor(52,2);
+    ILI9341_OutStringSize("Colors",ILI9341_BLACK, 2);
+    ILI9341_drawHLine(160, 44, 160, ILI9341_BLACK, 2);
 
-    // ILI9341_SetCursor(28,18);
+    ILI9341_SetCursor(52,5);
+    ILI9341_OutStringSize("WiFi",ILI9341_BLACK, 2);
+    ILI9341_drawHLine(160, 74, 160, ILI9341_BLACK, 2);
+
+    ILI9341_SetCursor(52,23);
+    ILI9341_OutStringSize("Back",ILI9341_BLACK, 1);
+
+		
+
+
+
+
+
+// for the music page 
+//     ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
+//     ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
+//     ILI9341_drawHLine(0, 12, 320, ILI9341_BLACK, 2);
+		
+
+//     ILI9341_SetCursor(52,2);
+//     ILI9341_OutStringSize("Blinding Lights",ILI9341_BLACK, 1);
+//     ILI9341_SetCursor(52,3);
+//     ILI9341_OutStringSize("The Weeknd",ILI9341_BLACK, 1);
+//     ILI9341_drawHLine(160, 44, 160, ILI9341_BLACK, 2);
+
+//     ILI9341_SetCursor(52,5);
+//     ILI9341_OutStringSize("Creep",ILI9341_BLACK, 1);
+//     ILI9341_SetCursor(52,6);
+//     ILI9341_OutStringSize("Radiohead",ILI9341_BLACK, 1);
+//     ILI9341_drawHLine(160, 74, 160, ILI9341_BLACK, 2);
+
+
+//     ILI9341_SetCursor(52,8);
+//     ILI9341_OutStringSize("Take Five",ILI9341_BLACK, 1);
+//     ILI9341_SetCursor(52,9);
+//     ILI9341_OutStringSize("Dave Brubeck",ILI9341_BLACK, 1);
+//     ILI9341_drawHLine(160, 104, 160, ILI9341_BLACK, 2);
+
+//     ILI9341_SetCursor(14,18);
+//     ILI9341_OutStringSize("||",ILI9341_BLACK, 2);
+		
+// 		ILI9341_SetCursor(8,18);
+//     ILI9341_OutStringSize(">|",ILI9341_BLACK, 2);
+		
+// 		ILI9341_SetCursor(20,18);
+//     ILI9341_OutStringSize("|<",ILI9341_BLACK, 2);
+		
+// 		ILI9341_drawHLine(25, 220, 100, ILI9341_BLACK, 2);
+// 		// using hte bytes of the song you can see how much time is left 
+// 		// do it in dac_out - have a counter 25+((1-(bytes_done/bytes_total))*100) - for the x cord for the length its just (bytes_done/bytes_total)*100
+
+//    // you can also do bytes_done/ bytes_total - decimal part (100 + 25) - how much finished is starting position 
+// 		ILI9341_drawHLine(75, 217, 50, ILI9341_RED, 3);
+		
+// 		ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);    
+// 		ILI9341_DrawBitmap(15,145,weeknd, 120, 120);
+
+//     ILI9341_SetCursor(52,23);
+//     ILI9341_OutStringSize("Back",ILI9341_BLACK, 1);
+
+
+
+
+
+// this is for now playing page 
+
+    // ILI9341_SetCursor(28,19);
     // ILI9341_OutStringSize("||",ILI9341_BLACK, 2);
 		
-    // ILI9341_SetCursor(22,18);
+    // ILI9341_SetCursor(22,19);
     // ILI9341_OutStringSize(">|",ILI9341_BLACK, 2);
 		
-	//   ILI9341_SetCursor(34,18);
+	//   ILI9341_SetCursor(34,19);
     // ILI9341_OutStringSize("|<",ILI9341_BLACK, 2);
 
-    // ILI9341_drawHLine(140, 217, 70, ILI9341_RED, 3);
-    // ILI9341_drawHLine(110, 220, 100, ILI9341_BLACK, 2);
+    // ILI9341_drawHLine(160, 217, 70, ILI9341_RED, 3);
+    // ILI9341_drawHLine(90, 220, 140, ILI9341_BLACK, 2);
 
-    // ILI9341_SetCursor(52,1);
+
+    // ILI9341_DrawStringCord(318, 2, "Now Playing",ILI9341_BLACK, 1);
+    // ILI9341_drawHLine(0, 10, 320, ILI9341_BLACK, 2);
+
+    // ILI9341_SetCursor(52,2);
     // ILI9341_OutStringSize("Back",ILI9341_BLACK, 2);
+
+    // ILI9341_fillRect(150, 50, 120, 120, ILI9341_WHITE);    
+    // ILI9341_DrawBitmap(150,170,weeknd, 120, 120);
+
+    // ILI9341_SetCursor(20, 6);
+    // ILI9341_OutStringSize("Blinding Lights",ILI9341_BLACK, 1);
 		
+	// ILI9341_SetCursor(20, 7);
+    // ILI9341_OutStringSize("After Hours",ILI9341_BLACK, 1);
+		
+	// ILI9341_SetCursor(20, 8);
+    // ILI9341_OutStringSize("The Weeknd",ILI9341_BLACK, 1);
+		
+		
+
+
+
+
 
 
         // this is for main menu 
-    ILI9341_DrawBitmap(15,135,weeknd, 120, 120);
-    ILI9341_drawVLine(160,0,240, ILI9341_BLACK, 2);
-    ILI9341_SetCursor(52,1);
-    ILI9341_OutStringSize("Messages",ILI9341_BLACK, 2);
-    ILI9341_drawHLine(160, 34, 160, ILI9341_BLACK, 2);
 
-    ILI9341_SetCursor(52,4);
-    ILI9341_OutStringSize("Music",ILI9341_BLACK, 2);
-    ILI9341_drawHLine(160, 64, 160, ILI9341_BLACK, 2);
+//     ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
 
-
-    ILI9341_SetCursor(52,7);
-    ILI9341_OutStringSize("Settings",ILI9341_BLACK, 2);
-    ILI9341_drawHLine(160, 94, 160, ILI9341_BLACK, 2);
-
-
-    ILI9341_SetCursor(52,10);
-    ILI9341_OutStringSize("Now Playing",ILI9341_BLACK, 2);
-    ILI9341_drawHLine(160, 124, 160, ILI9341_BLACK, 2);
-
-    ILI9341_SetCursor(14,17);
-    ILI9341_OutStringSize("||",ILI9341_BLACK, 2);
+// ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
+//     ILI9341_drawHLine(0, 12, 320, ILI9341_BLACK, 2);
 		
-		ILI9341_SetCursor(8,17);
-    ILI9341_OutStringSize(">|",ILI9341_BLACK, 2);
-		
-		ILI9341_SetCursor(20,17);
-    ILI9341_OutStringSize("|<",ILI9341_BLACK, 2);
-		
-		ILI9341_drawHLine(25, 210, 100, ILI9341_BLACK, 2);
-		//using hte bytes of the song you can see how much time is left 
-		// do it in dac_out - have a counter 25+((1-(bytes_done/bytes_total))*100) - for the x cord for the length its just (bytes_done/bytes_total)*100
 
-    // you can also do bytes_done/ bytes_total - decimal part (100 + 25) - how much finished is starting position 
-		ILI9341_drawHLine(75, 207, 50, ILI9341_RED, 3);
+//     ILI9341_SetCursor(52,2);
+//     ILI9341_OutStringSize("Messages",ILI9341_BLACK, 2);
+//     ILI9341_drawHLine(160, 44, 160, ILI9341_BLACK, 2);
+
+//     ILI9341_SetCursor(52,5);
+//     ILI9341_OutStringSize("Music",ILI9341_BLACK, 2);
+//     ILI9341_drawHLine(160, 74, 160, ILI9341_BLACK, 2);
+
+
+//     ILI9341_SetCursor(52,8);
+//     ILI9341_OutStringSize("Settings",ILI9341_BLACK, 2);
+//     ILI9341_drawHLine(160, 104, 160, ILI9341_BLACK, 2);
+
+
+//     ILI9341_SetCursor(52,11);
+//     ILI9341_OutStringSize("Now Playing",ILI9341_BLACK, 2);
+//     ILI9341_drawHLine(160, 134, 160, ILI9341_BLACK, 2);
+
+
+
+//     ILI9341_SetCursor(14,18);
+//     ILI9341_OutStringSize("||",ILI9341_BLACK, 2);
+		
+// 		ILI9341_SetCursor(8,18);
+//     ILI9341_OutStringSize(">|",ILI9341_BLACK, 2);
+		
+// 		ILI9341_SetCursor(20,18);
+//     ILI9341_OutStringSize("|<",ILI9341_BLACK, 2);
+		
+// 		ILI9341_drawHLine(25, 220, 100, ILI9341_BLACK, 2);
+// 		// using hte bytes of the song you can see how much time is left 
+// 		// do it in dac_out - have a counter 25+((1-(bytes_done/bytes_total))*100) - for the x cord for the length its just (bytes_done/bytes_total)*100
+
+//    // you can also do bytes_done/ bytes_total - decimal part (100 + 25) - how much finished is starting position 
+// 		ILI9341_drawHLine(75, 217, 50, ILI9341_RED, 3);
+		
+// 		ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);    
+// 		ILI9341_DrawBitmap(15,145,weeknd, 120, 120);
 
 
    front8 = Buf2; // buffer being output to DAC
