@@ -200,11 +200,11 @@ extern void ILI9341_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, i
 
 extern uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor, uint8_t size); 
 
-extern void ILI9341_OutChar(char ch, uint8_t size);
+extern void ILI9341_OutChar(char ch, uint8_t size, int16_t textColor);
 
-extern void ILI9341_OutString(char *ptr);
+extern void ILI9341_OutString(char *ptr, int16_t textColor);
 
-extern void ILI9341_OutStringSize(char *ptr, uint8_t size);
+extern void ILI9341_OutStringSize(char *ptr, int16_t textColor, uint8_t size);
 
 
 extern void ILI9341_SetCursor(uint32_t newX, uint32_t newY);

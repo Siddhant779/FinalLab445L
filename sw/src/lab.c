@@ -524,7 +524,7 @@ int main(void) {
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
-    //ILI9341_fillScreen(ILI9341_BLACK);
+    ILI9341_fillScreen(ILI9341_BLACK);
     //x is up to 320 and y is up to 240 - for drawing pixel
 	
     // ILI9341_OutStringSize("Song 1:hello by TPOD gang\n""Song 2\n", 2);
@@ -539,7 +539,8 @@ int main(void) {
   BufCount8 = 0;
   done_song = 0;
   stop_dac = 0;
-
+    ILI9341_SetCursor(50,6);
+    ILI9341_OutStringSize("testing color",ILI9341_LIGHTGREEN, 2);
     MountFresult = f_mount(&g_sFatFs, "", 0);
     if(MountFresult){
         ILI9341_DrawString(52, 0, "f_mount error",0x03E0 , 2);
@@ -565,27 +566,31 @@ int main(void) {
 	// 				}
 	// 				y-=15;
     // }
-        while(1){
-            if(flag8){ // 1 means need data
-            flag8 = 0;
-        // 1.5ms to 1.6ms to read 512 bytes 
-            Fresult = f_read(&Handle2, back8, BUFSIZE8,
-                &successfulreads);
-            if(Fresult){
-                ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
-                while(1){};
-            }
-            BufCount8++;
-            if(BufCount8 == NUMBUF8){ // could have seeked
-                Fresult = f_close(&Handle2);
-								done_song = 1;
-                Fresult = f_open(&Handle2, LightsFilename, FA_READ);
-                BufCount8 = 0;
-								//memset(Buf2, 0, 512);
-            }
-            }
-        // other tasks
-  }
+
+
+
+    // this is code for music part 
+//         while(1){
+//             if(flag8){ // 1 means need data
+//             flag8 = 0;
+//         // 1.5ms to 1.6ms to read 512 bytes 
+//             Fresult = f_read(&Handle2, back8, BUFSIZE8,
+//                 &successfulreads);
+//             if(Fresult){
+//                 ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
+//                 while(1){};
+//             }
+//             BufCount8++;
+//             if(BufCount8 == NUMBUF8){ // could have seeked
+//                 Fresult = f_close(&Handle2);
+// 								done_song = 1;
+//                 Fresult = f_open(&Handle2, LightsFilename, FA_READ);
+//                 BufCount8 = 0;
+// 								//memset(Buf2, 0, 512);
+//             }
+//             }
+//         // other tasks
+//   }
 
 
 

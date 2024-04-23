@@ -762,7 +762,7 @@ uint32_t ILI9341_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor,
 }
 
 
-void ILI9341_OutChar(char ch, uint8_t size){
+void ILI9341_OutChar(char ch, uint8_t size, int16_t textColor){
   if((ch == 10) || (ch == 13) || (ch == 27)){
     Ycord+=size; Xcord=52;
     if(Ycord>22){
@@ -771,25 +771,25 @@ void ILI9341_OutChar(char ch, uint8_t size){
     ILI9341_DrawString(0,Ycord,"                     ",TextColor, size);
     return;
   }
-  ILI9341_DrawCharS(Xcord*6,Ycord*10,ch,0x03E0,ILI9341_BLACK, size);
+  ILI9341_DrawCharS(Xcord*6,Ycord*10,ch,textColor,ILI9341_BLACK, size);
   Xcord-=size;
   if(Xcord < 0){
     Xcord = 0;
-    ILI9341_DrawCharS(Xcord*6,Ycord*10,'*',0x03E0,ILI9341_BLACK, size);
+    ILI9341_DrawCharS(Xcord*6,Ycord*10,'*',textColor,ILI9341_BLACK, size);
   }
   return;
 }
 
-void ILI9341_OutString(char *ptr){
+void ILI9341_OutString(char *ptr, int16_t textColor){
   while(*ptr){
-    ILI9341_OutChar(*ptr, 1);
+    ILI9341_OutChar(*ptr, 1, textColor);
     ptr = ptr + 1;
   }
 }
 
-void ILI9341_OutStringSize(char *ptr, uint8_t size){
+void ILI9341_OutStringSize(char *ptr, int16_t textColor, uint8_t size){
   while(*ptr){
-    ILI9341_OutChar(*ptr, size);
+    ILI9341_OutChar(*ptr, size, textColor);
     ptr = ptr + 1;
   }
 }
