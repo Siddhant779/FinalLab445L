@@ -2,10 +2,18 @@
 #include "Messages.h"
 #include "ILI9341.h"
 
-char keys[4][10] = {{'1','2','3','4','5','6','7','8','9','0'},
+char (*keys)[4][10];
+
+
+char lower[4][10] = {{'1','2','3','4','5','6','7','8','9','0'},
 										{'q','w','e','r','t','y','u','i','o','p'},
 										{'a','s','d','f','g','h','j','k','l', ';'},
 										{'z','x','c','v','b','n','m',',','.','/'}};
+
+char upper[4][10] = {{'!','@','#','$','%','^','&','*','(',')'},
+										{'Q','W','E','R','T','Y','U','I','O','P'},
+										{'A','S','D','F','G','H','J','K','L', ':'},
+										{'Z','X','C','V','B','N','M','<','>','?'}};
 
 char* control_keys[4] = {"CAPS ","SPACE ", "<X ", "ENTER"};
 
@@ -13,6 +21,9 @@ char* control_keys[4] = {"CAPS ","SPACE ", "<X ", "ENTER"};
 coord_t character;
 char type_message[64];
 uint8_t message_index;
+uint8_t shifted;
+uint8_t need_erase_text;
+
 
 void message_init(void){
 	for (int i = 0; i < 64; i++){
@@ -21,6 +32,9 @@ void message_init(void){
 	character.row = 0;
 	character.col = 0;
 	message_index = 0;
+	keys = &lower;
+	shifted = 0;
+	need_erase_text = 0;
 }
 void display_keys(void){
 	int x = 40;
@@ -31,7 +45,7 @@ void display_keys(void){
 			uint32_t color = ILI9341_BLACK;
 			if ((i == character.row) && (j == character.col))
 				color = ILI9341_RED;
-			ILI9341_OutChar(keys[i][j], 1, color);
+			ILI9341_OutChar((*keys)[i][j], 1, color);
 			ILI9341_OutChar(' ', 1, ILI9341_BLACK);
 		}
 		y += 1;
@@ -44,6 +58,11 @@ void display_keys(void){
 		ILI9341_OutString(control_keys[i], color);
 	}
 	y = 5;
+	if (need_erase_text){
+		ILI9341_SetCursor(x, y);
+		ILI9341_fillRect(50,50, 220, 20, ILI9341_WHITE);
+		need_erase_text = 0;
+	}
 	ILI9341_SetCursor(x, y);
 	ILI9341_OutStringSize(type_message, ILI9341_BLACK, 2);
 }
@@ -111,12 +130,17 @@ void move_coords(uint8_t input){
 void append_message(void){
 	if (message_index < 63){
 		if(character.row < 4){
-			type_message[message_index] = keys[character.row][character.col];
+			type_message[message_index] = (*keys)[character.row][character.col];
 			message_index++;
 		}
 		else if (character.row == 4){
 			if (character.col == 0){//CAPS
-			
+				shifted ^= 0x01;
+				if (shifted == 0x00)
+					keys = &lower;
+				else
+					keys = &upper;
+				
 			}
 			else if (character.col == 1){//SPACE
 				type_message[message_index] = ' ';
@@ -125,6 +149,7 @@ void append_message(void){
 			else if (character.col == 2){//BACKSPACE
 				message_index--;
 				type_message[message_index] = 0;	
+				need_erase_text = 1;
 			}
 			else if (character.col == 3){//ENTER
 			
