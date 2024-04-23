@@ -393,6 +393,7 @@ void static ILI9341_setColor(uint32_t rgb) {
     //    uint8_t r = (rgb & 0xF80000) >> 19;
     //    uint8_t g = (rgb & 0x00FC00) >> 10;
     //    uint8_t b = (rgb & 0x0000F8) >> 3;
+    //NEED TO CHANGE THIS CODE 
     uint8_t r = (rgb & 0xF80000) >> 19;
     uint8_t g = (rgb & 0x00FC00) >> 10;
     uint8_t b = (rgb & 0x0000F8) >> 3;
@@ -529,36 +530,58 @@ void ILI9341_drawPixel(uint32_t x, uint32_t y, uint32_t rgb) {
     endSPITransaction();
 }
 
-//  Coordinate is left-most pixel of line
-void ILI9341_drawHLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb) {
+void ILI9341_drawHLineOtherWay(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb, uint8_t width) {
     if((x > _width) || (y > _height)) return;
-    if(x + l > _width) l = _width-x;
+    //if(x - l > 0) l = x-0;
 
+  for(int s = 0; s < width; s++) {
     beginSPITransaction();
 
-    ILI9341_setCoords(x,y,x+l,y);
+    ILI9341_setCoords(x,y+s,x-l,y+s);
 
     for(uint32_t i = 0; i < l; i++) {
         ILI9341_setColor(rgb);
     }
     deselect();
     endSPITransaction();
+  }
 }
 
-//  Coordinate is bottom pixel of line
-void ILI9341_drawVLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb) {
+//  Coordinate is left-most pixel of line
+void ILI9341_drawHLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb, uint8_t width) {
     if((x > _width) || (y > _height)) return;
-    if(y + l > _width) l = _height-y;
+    if(x + l > _width) l = _width-x;
 
+  for(int s = 0; s < width; s++) {
     beginSPITransaction();
 
-    ILI9341_setCoords(x,y,x,y+l);
+    ILI9341_setCoords(x,y+s,x+l,y+s);
 
-    for(uint16_t i = 0; i < l; i++) {
+    for(uint32_t i = 0; i < l; i++) {
         ILI9341_setColor(rgb);
     }
     deselect();
     endSPITransaction();
+  }
+}
+
+//  Coordinate is bottom pixel of line
+void ILI9341_drawVLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb, uint8_t width) {
+    if((x > _width) || (y > _height)) return;
+    if(y + l > _width) l = _height-y;
+
+
+    for(int s = 0; s < width; s ++){
+      beginSPITransaction();
+
+      ILI9341_setCoords(x+s,y,x+s,y+l);
+
+      for(uint16_t i = 0; i < l; i++) {
+          ILI9341_setColor(rgb);
+      }
+      deselect();
+      endSPITransaction();
+    }
 }
 
 void ILI9341_drawColors(uint32_t x, uint32_t y, int32_t *rgbArr, uint16_t totalPixels) {
@@ -654,6 +677,7 @@ void endSPITransaction(void) {
 //        h     number of pixels tall
 // Output: none
 // Must be less than or equal to 128 pixels wide by 160 pixels high
+//FOR ILI THE X IS THE RIGHT SIDE AND THE Y IS THE BOTTOM PART OF IT 
 void ILI9341_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h){
   int16_t skipC = 0;                      // non-zero if columns need to be skipped due to clipping
   int16_t originalWidth = w;              // save this value; even if not all columns fit on the screen, the image is still this width in ROM

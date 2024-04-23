@@ -116,7 +116,7 @@ extern void ILI9341_drawPixel(uint32_t x, uint32_t y, uint32_t rgb);
  *  @param      rgb     6-6-6 RGB value of pixel
  */
 //working
-extern void ILI9341_drawHLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb);
+extern void ILI9341_drawHLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb, uint8_t width);
 
 /*
  *  @brief      Sets individual pixel on LCD
@@ -127,7 +127,7 @@ extern void ILI9341_drawHLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb);
  *  @param      rgb     6-6-6 RGB value of pixel
  */
 //working
-extern void ILI9341_drawVLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb);
+extern void ILI9341_drawVLine(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb, uint8_t width);
 
 /*
  *  @brief       Draws a multi-colored line, optimized for efficiency
@@ -211,6 +211,9 @@ extern void setRotation(uint8_t m);
 extern void ILI9341_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
 
 extern void ILI9341_setBGColor(uint32_t bgColor);
+
+extern void ILI9341_drawHLineOtherWay(uint32_t x, uint32_t y, uint32_t l, uint32_t rgb, uint8_t width);
+
 
 
 
