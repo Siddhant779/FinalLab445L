@@ -119,6 +119,8 @@ int main(void) {
 		/* Initialize music driver */
 		//music_init();
     message_init();
+		
+		FSM_Init();
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
