@@ -3,7 +3,6 @@
 
 #include "./inc/tm4c123gh6pm.h"
 #include "Display.h"
-#include "inc/ST7735.h"
 #include "Music.h"
 #include "FSM.h"
 

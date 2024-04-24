@@ -24,7 +24,6 @@
 
 
 #include "ILI9341.h"
-#include "../inc/ST7735.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -359,6 +358,16 @@ static const uint8_t cmd_ili9341[] = {
     ILI9341_SLPOUT, DELAY, 200,  // Normal display on, 10ms delay
     ILI9341_DISPON, DELAY, 100
 };
+
+void Delay1ms(uint32_t n){uint32_t volatile time;
+  while(n){
+    time = 72724*2/91;  // 1msec, tuned at 80 MHz
+    while(time){
+      time--;
+    }
+    n--;
+  }
+}
 
 static void writeCommand(uint8_t c) {
                                         // wait until SSI0 not busy/transmit FIFO empty

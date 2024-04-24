@@ -51,7 +51,6 @@ controls file - buttons deals with that
 /* Talking to PC via UART. */
 #include "./inc/UART.h"
 /* ST7735 display. */
-#include "./inc/ST7735.h"
 #include "ILI9341.h"
 
 
@@ -188,7 +187,7 @@ int main(void) {
     // this is code for music part 
         while(1){
             //could check if need to draw flag here. If so, Fill screen white
-            //set needtoDraw in FSMController when state transitions to a new menu, like all the back button transitions
+            //set needtoDraw in FSMController when state transitions to a new menu, like all the back button tran
             State_t current_state = Get_State();
             switch(current_state.name){
                 case menu_mus:

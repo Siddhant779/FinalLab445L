@@ -14,7 +14,7 @@ Inputs:
 3 = Down
 4 = Enter
 */ 
-State_t FSM[27] = {
+const State_t FSM[27] = {
     {menu_mus, &Do_Nothing, {menu_play, menu_re, menu_mus, menu_msg, song1}},
     {menu_msg, &Do_Nothing, {menu_mus, menu_re, menu_msg, menu_set, msg_key}},
     {menu_set, &Do_Nothing, {menu_msg, menu_re, menu_set, menu_play, set_col}},

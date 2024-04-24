@@ -216,10 +216,7 @@ extern void ILI9341_drawHLineOtherWay(uint32_t x, uint32_t y, uint32_t l, uint32
 
 extern uint32_t ILI9341_DrawStringCord(uint16_t x, uint16_t y, char *pt, uint32_t textColor, uint8_t size);
 
-
-
-
-
+extern void Delay1ms(uint32_t n);
 
 
 

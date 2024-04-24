@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 
-enum StateName{
+const enum StateName{
     menu_mus, // Music option within menu
     menu_msg, // Message option within menu
     menu_set, // Settings option within menu

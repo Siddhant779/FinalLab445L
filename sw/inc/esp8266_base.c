@@ -18,7 +18,7 @@
 
 #include "UART.h"
 #include "UART5.h"
-#include "ST7735.h"
+//#include "ST7735.h"
 #include "Clock.h"
 #include "esp8266.h"
 
@@ -98,8 +98,8 @@ void SetupWiFi(void)
   UART_OutString("Waiting for RDY flag from ESP\r\n");
   #endif
   
-  ST7735_DrawString(0,0,"In WiFI_Setup routine", ST7735_Color565(255, 255, 255 ));
-  ST7735_DrawString(0,1,"Waiting for RDY flag ", ST7735_Color565(255, 255, 255 ));
+  //ST7735_DrawString(0,0,"In WiFI_Setup routine", ST7735_Color565(255, 255, 255 ));
+  //ST7735_DrawString(0,1,"Waiting for RDY flag ", ST7735_Color565(255, 255, 255 ));
   
   while (!RDY) {      // Wait for ESP8266 indicate it is ready for programming data
     #ifdef DEBUG1
@@ -128,8 +128,8 @@ void SetupWiFi(void)
     #endif
     
     #ifdef DEBUG3
-    ST7735_DrawString(0,3,ssid, ST7735_Color565(255, 0, 0 ));
-    ST7735_DrawString(0,4,pass, ST7735_Color565(255, 0, 0 ));
+    // ST7735_DrawString(0,3,ssid, ST7735_Color565(255, 0, 0 ));
+    // ST7735_DrawString(0,4,pass, ST7735_Color565(255, 0, 0 ));
     #endif
   
   while ((RDY) | ((UART5_FR_R & UART5_FR_RXFE) ==	0)) { 
@@ -139,10 +139,10 @@ void SetupWiFi(void)
         UART_OutChar(inchar);                        // Output received character
 			#endif
     } else {
-			ST7735_DrawString(0,8,"waiting", ST7735_Color565(200, 0, 0 ));
+			//ST7735_DrawString(0,8,"waiting", ST7735_Color565(200, 0, 0 ));
 		}
   }
-  ST7735_DrawString(0,8,"Exiting WiFI_Setup", ST7735_Color565(255, 0, 0 ));
+  //ST7735_DrawString(0,8,"Exiting WiFI_Setup", ST7735_Color565(255, 0, 0 ));
   PE3 = BIT3;
   
   #ifdef DEBUG1

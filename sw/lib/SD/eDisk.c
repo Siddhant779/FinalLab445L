@@ -54,7 +54,6 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "eDisk.h"
 #include "./src/ILI9341.h"
-#include "../inc/ST7735.h"
 
 // these defines are in two places, here and in ST7735.c
 #define SDC_CS_PB0 1
