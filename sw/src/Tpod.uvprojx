@@ -588,6 +588,16 @@
               <FileType>1</FileType>
               <FilePath>.\ILI9341.c</FilePath>
             </File>
+            <File>
+              <FileName>Display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Display.c</FilePath>
+            </File>
+            <File>
+              <FileName>Display.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Display.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

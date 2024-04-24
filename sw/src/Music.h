@@ -18,7 +18,7 @@ extern int flag8; // 1 means need data into back
 extern uint32_t BufCount8; // 0 to NUMBUF8-1
 extern uint8_t done_song;
 extern uint8_t stop_dac;
-
+extern uint32_t counterSong;
 
 typedef struct Music{
     char *album_file; // name of the file to read from sd card for album bitmap image
@@ -31,7 +31,9 @@ typedef struct Music{
 
 } Music;
 
+extern Music Songs[3];
 
+extern uint8_t SongStrIndex;
 // Initialize music driver
 void music_init(void);
 

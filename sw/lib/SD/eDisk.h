@@ -218,6 +218,8 @@ void CS_Init(void);
  * @brief  This should be called every 10 ms.
  */
 void disk_timerproc(void);
+
+void SSI2_Init(unsigned long CPSDVSR);
     
 /**
  * @details  General purpose function for all disk I/O

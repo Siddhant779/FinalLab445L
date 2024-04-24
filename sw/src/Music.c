@@ -14,7 +14,7 @@ uint32_t SongIndex;
 uint32_t SongLength;
 uint16_t Volume;
 uint16_t DacData;
-
+uint32_t counterSong;
 
 
 uint8_t Buf[BUFSIZE8];
@@ -31,6 +31,14 @@ void adc_init(void);
 void send_to_dac(void);
 void update_volume(void);
 uint16_t ADC_In(void);
+
+uint8_t SongStrIndex = 0;
+
+Music Songs[3] = {
+    {"weekndIm", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
+	{"creepIm", "Creep.bin", "Creep", "Radiohead", "Pablo Honey", 2610720},
+	{"TakeFIm", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184}
+};
 
 void music_init(void) {
 	// PB5 is initialized as an analog input in Unified_Port_Init, so there is no need to reinitialize it here
@@ -56,6 +64,7 @@ void send_to_dac(void) {
 		dac_output((data*Volume)/2000); // 12 bit
 	}
 	Count8++;
+	counterSong++;
  	if(Count8 == BUFSIZE8){
 		if(done_song) {
 			pause_song();
