@@ -55,7 +55,6 @@ controls file - buttons deals with that
 
 
 /* Add whatever else you need here! */
-#include "./lib/RGB/RGB.h"
 #include "Switch.h"
 #include "Music.h"
 #include "../lib/SD/eDisk.h"
@@ -112,7 +111,7 @@ int main(void) {
 	//setRotation(3);
 
     /* Start RGB flashing. WARNING! BRIGHT FLASHING COLORS. DO NOT RUN IF YOU HAVE EPILEPSY. */
-    RGBInit();
+    //RGBInit();
 		
 		/* Initialize buttons */
 		switch_init();
@@ -265,7 +264,6 @@ int main(void) {
     //Pause();
 
     /* Stop RGB and turn off any on LEDs. */
-    RGBStop();
     PF1 = 0;
     PF2 = 0;
     PF3 = 0;

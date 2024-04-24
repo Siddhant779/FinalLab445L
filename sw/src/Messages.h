@@ -3,8 +3,8 @@
 #include "./inc/tm4c123gh6pm.h"
 
 typedef struct coord{
-	uint8_t row;
-	uint8_t col;
+	int8_t row;
+	int8_t col;
 }coord_t;
 
 void display_keys(void);

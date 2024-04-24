@@ -504,11 +504,6 @@
           <GroupName>lib</GroupName>
           <Files>
             <File>
-              <FileName>RGB.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\lib\RGB\RGB.c</FilePath>
-            </File>
-            <File>
               <FileName>eDisk.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\lib\SD\eDisk.h</FilePath>

@@ -41,7 +41,7 @@ const State_t FSM[27] = {
     {set_wifi, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
     {set_bck, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
     {msg_key, &keys_cursor, {msg_key, msg_key, msg_key, msg_key, msg_key}},
-    {msg_bck, &Do_Nothing, {menu_mus, msg_key, menu_mus, msg_key, menu_mus}},
+    {msg_bck, &Do_Nothing, {menu_mus, msg_key, menu_mus, msg_key, menu_mus}}
 };
 
 State_t current_state;

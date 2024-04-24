@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 
-const enum StateName{
+enum StateName{
     menu_mus, // Music option within menu
     menu_msg, // Message option within menu
     menu_set, // Settings option within menu
@@ -38,7 +38,7 @@ const enum StateName{
 typedef struct State{
     enum StateName name;
     void (*func)(uint8_t input);
-    enum StateName Next[4];
+    enum StateName Next[5];
 
 } State_t;
 
