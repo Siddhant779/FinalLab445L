@@ -9,7 +9,7 @@
 
 
 void drawMainMenu(enum StateName menu){
-    ILI9341_fillScreen(ILI9341_WHITE);
+    //ILI9341_fillScreen(ILI9341_WHITE);
     ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
 
     ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
@@ -77,7 +77,7 @@ void drawMainMenu(enum StateName menu){
 
 void drawNowPlayingPage(enum StateName menu) {
     uint32_t color = ILI9341_BLACK;	
-    ILI9341_fillScreen(ILI9341_WHITE);
+    //ILI9341_fillScreen(ILI9341_WHITE);
     ILI9341_SetCursor(28,19);
     color = (menu == np_pl) ? ILI9341_BLUE : ILI9341_BLACK;
     ILI9341_OutStringSize("||",color, 2);
@@ -117,7 +117,7 @@ void drawNowPlayingPage(enum StateName menu) {
 
 void drawMusicPage(enum StateName menu){
     // for the music page 
-    ILI9341_fillScreen(ILI9341_WHITE);
+    //ILI9341_fillScreen(ILI9341_WHITE);
     ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
     ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
     ILI9341_drawHLine(0, 12, 320, ILI9341_BLACK, 2);
@@ -200,7 +200,7 @@ void drawMusicPage(enum StateName menu){
 }
 
 void drawSettingsPage(enum StateName menu) {
-    ILI9341_fillScreen(ILI9341_WHITE);
+    //ILI9341_fillScreen(ILI9341_WHITE);
     ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
     ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
     ILI9341_drawHLine(0, 12, 320, ILI9341_BLACK, 2);

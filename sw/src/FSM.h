@@ -60,4 +60,10 @@ void Rewind_song(uint8_t input);
 
 void Next_song(uint8_t input);
 
+uint8_t get_clear_flag(void);
+
+void set_clear_flag(uint8_t flag);
+
+void screen_clear(uint8_t input);
+
 #endif

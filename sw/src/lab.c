@@ -183,12 +183,14 @@ int main(void) {
 	// 				y-=15;
     // }
 
-
-
     // this is code for music part 
         while(1){
             //could check if need to draw flag here. If so, Fill screen white
             //set needtoDraw in FSMController when state transitions to a new menu, like all the back button tran
+						if (get_clear_flag()){
+							ILI9341_fillScreen(ILI9341_WHITE);
+							set_clear_flag(0);
+						}
             State_t current_state = Get_State();
             switch(current_state.name){
                 case menu_mus:
