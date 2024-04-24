@@ -66,4 +66,8 @@ void set_clear_flag(uint8_t flag);
 
 void screen_clear(uint8_t input);
 
+uint8_t get_jump_flag(void);
+
+void set_jump_flag(uint8_t flag);
+
 #endif

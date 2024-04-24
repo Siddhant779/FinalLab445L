@@ -14,7 +14,7 @@ Inputs:
 3 = Down
 4 = Enter
 */ 
-const State_t FSM[27] = {
+const State_t FSM[26] = {
     {menu_mus, &screen_clear, {menu_play, menu_re, menu_mus, menu_msg, song1}},
     {menu_msg, &screen_clear, {menu_mus, menu_re, menu_msg, menu_set, msg_key}},
     {menu_set, &screen_clear, {menu_msg, menu_re, menu_set, menu_play, set_col}},
@@ -29,10 +29,10 @@ const State_t FSM[27] = {
     {song5, &Do_Nothing, {song4, mus_re, song5, song6, song5}},
     {song6, &Do_Nothing, {song5, mus_re, song6, song7, song6}},
     {song7, &Do_Nothing, {song6, mus_re, song7, song1, song7}},
-    {mus_pl, &Play_pause, {mus_ba, mus_fa, mus_re, mus_pl, mus_pl}},
-    {mus_fa, &Next_song, {mus_ba, mus_fa, mus_pl, mus_fa, mus_fa}},
-    {mus_re, &Rewind_song, {mus_ba, mus_pl, song1, mus_re, mus_re}},
-    {mus_ba, &screen_clear, {mus_ba, mus_ba, song1, mus_fa, menu_mus}},
+    {mus_pl, &Play_pause, {mus_pl, mus_fa, mus_re, mus_ba, mus_pl}},
+    {mus_fa, &Next_song, {mus_fa, mus_fa, mus_pl, mus_ba, mus_fa}},
+    {mus_re, &Rewind_song, {mus_re, mus_pl, song1, mus_ba, mus_re}},
+    {mus_ba, &screen_clear, {song1, mus_ba, mus_ba, mus_ba, menu_mus}},
     {np_pl, &Play_pause, {np_ba, np_fa, np_re, np_pl, np_pl}},
     {np_fa, &Next_song, {np_ba, np_fa, np_pl, np_fa, np_fa}},
     {np_re, &Rewind_song, {np_ba, np_pl, np_ba, np_re, np_re}},
@@ -40,17 +40,19 @@ const State_t FSM[27] = {
     {set_col, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
     {set_wifi, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
     {set_bck, &screen_clear, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
-    {msg_key, &keys_cursor, {msg_key, msg_key, msg_key, msg_key, msg_key}},
-    {msg_bck, &screen_clear, {menu_mus, msg_key, menu_mus, msg_key, menu_mus}}
+    {msg_key, &keys_cursor, {msg_key, msg_key, msg_key, msg_key, msg_key}}
+    
 };
-
+//{msg_bck, &screen_clear, {menu_mus, msg_key, menu_mus, msg_key, menu_mus}}
 State_t current_state;
 uint8_t clear_flag;
+uint8_t jump_state_flag;
 
 
 void FSM_Init(){
     current_state = FSM[0];
 		clear_flag = 1;
+	jump_state_flag = 0;
 }
 
 uint8_t get_clear_flag(void){
@@ -59,6 +61,14 @@ uint8_t get_clear_flag(void){
 
 void set_clear_flag(uint8_t flag){
 	clear_flag = flag;
+}
+
+uint8_t get_jump_flag(void){
+	return jump_state_flag;
+}
+
+void set_jump_flag(uint8_t flag){
+	jump_state_flag = flag;
 }
 
 State_t Get_State(){
@@ -79,7 +89,10 @@ Inputs:
 */ 
 void FSM_Controller(uint8_t input){
     (*(current_state.func))(input); //do function based on input
-    current_state = FSM[current_state.Next[input-1]]; //change state
+		if (jump_state_flag == 0)//if we hijacked
+			current_state = FSM[current_state.Next[input-1]]; //change state
+		else
+			jump_state_flag = 0;
 }
 
 void Do_Nothing(uint8_t input){

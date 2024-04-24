@@ -2,6 +2,7 @@
 #include "Messages.h"
 #include "ILI9341.h"
 #include <string.h>
+#include "FSM.h"
 
 char (*keys)[4][10];
 
@@ -142,7 +143,7 @@ void move_coords(uint8_t input){
 						character.col = 8;
 					}			
 		}
-		else if (character.row != 0)
+		if (character.row > 0)
 				character.row -= 1;
 		else if (character.row == 0 && character.col == 0){ //set to back
 			character.row = -1;
@@ -159,12 +160,12 @@ void move_coords(uint8_t input){
 			character.row = 0;
 			character.col = 0;
 		}
-		else if (character.col != 9)
+		else if (character.col < 9)
 			character.col += 1;
 		
 	}
 	else if (input == 3){//left
-		if (character.col != 0)
+		if (character.col > 0)
 				character.col -= 1;
 		else if (character.row == 0 && character.col == 0){ //set to back
 			character.row = -1;
@@ -202,7 +203,7 @@ void move_coords(uint8_t input){
 
 void append_message(void){
 	if (message_index < 39){
-		if(character.row < 4){
+		if(character.row < 4 && character.row >= 0){
 			type_message[message_index] = (*keys)[character.row][character.col];
 			message_index++;
 		}
@@ -242,6 +243,11 @@ void append_message(void){
 					message_erase();
 				}
 			}
+		}
+		else if (character.row == -1 && character.col == -1){//go back in the menu
+			set_clear_flag(1);
+			set_jump_flag(1);
+			Set_state(menu_msg);
 		}
 	}
 }
