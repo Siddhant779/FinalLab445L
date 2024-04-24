@@ -70,6 +70,8 @@ controls file - buttons deals with that
 #define PF2   (*((volatile uint32_t *)0x40025010)) // BLUE LED
 #define PF3   (*((volatile uint32_t *)0x40025020)) // GREEN LED
 #define PF4   (*((volatile uint32_t *)0x40025040)) // Right Button
+	
+#define BITBUFSIZE16 14400
 
 void Pause(void);
 void DelayWait10ms(uint32_t n);
@@ -79,13 +81,14 @@ FIL Handle2;
 FRESULT MountFresult;
 FRESULT Fresult;
 
-
+uint16_t Bitmap[BITBUFSIZE16];
 
 const char LightsFilename[] = "Lights.bin";   // 8 characters or fewer
 
 const char TakeFilename[] = "TakeFive.bin";   // 8 characters or fewer
 
 //we are going to have to map the album cover to teh sonsg - we would ahve to use 
+UINT successfulreads, successfulwrites;
 
 int main(void) {
     /* Disable interrupts for initialization. */
@@ -122,7 +125,7 @@ int main(void) {
     // ILI9341_OutStringSize("Song 1:hello by TPOD gang\n""Song 2\n", 2);
 	//   ILI9341_OutStringSize("Song 1\n""Song 2", 1);
 	  uint8_t c, x, y;
-		UINT successfulreads, successfulwrites;
+		
 
 
 // this is for settings page 
@@ -343,6 +346,7 @@ int main(void) {
         while(1){
             if(flag8){ // 1 means need data
             flag8 = 0;
+						
         // 1.5ms to 1.6ms to read 512 bytes 
             Fresult = f_read(&Handle2, back8, BUFSIZE8,
                 &successfulreads);
@@ -351,6 +355,7 @@ int main(void) {
                 while(1){};
             }
             BufCount8++;
+						//if(BufCount8%COUNT) // Increasse length of progress bar
             if(BufCount8 == NUMBUF8){ // could have seeked
                 Fresult = f_close(&Handle2);
 								done_song = 1;
@@ -388,7 +393,8 @@ int main(void) {
     UART_OutString("Starting...\r\n");
 		
 		//load_song(TakeFive, 79749);
-		unpause_song();
+		//unpause_song();
+		
     while (1) {
 			/* TODO: Write your code here! */
 			//DelayWait10ms(50);
@@ -416,4 +422,21 @@ void Pause(void) {
     while (PF4 == 0x10) {
         DelayWait10ms(10);
     }
+}
+
+
+void LoadBitmap(char Filename[]) {
+	Fresult = f_open(&Handle2, Filename, FA_READ);
+	if(Fresult){
+    ILI9341_DrawString(52, 0, "bitmap file error",0x03E0 , 2);
+  }
+	if(Fresult == FR_OK) {
+		ILI9341_DrawString(52, 0, "opened bitmap file ",0x03E0 , 2);
+	}
+	
+	Fresult = f_read(&Handle2, Bitmap, BITBUFSIZE16*2, &successfulreads);
+	if(Fresult){
+		ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
+		while(1){};
+	}
 }
