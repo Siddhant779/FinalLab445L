@@ -87,28 +87,37 @@ void Do_Nothing(uint8_t input){
 }
 
 void Play_pause(uint8_t input) {
+	if (input == 5){
     if(is_playing()) pause_song();
     else unpause_song();
+	}
 }
 
 void Rewind_song(uint8_t input) {
-    rewind_song();
+	if (input == 5){
+		rewind_song();
+	}
 }
 
 void Next_song(uint8_t input) {
+	if (input == 5){
+	
+	}
     // Load and start the next song in the list
 }
 
 void Start_song(uint8_t input) {
-    //first set the SongStrIndex based on the state 
-    SongStrIndex =  (uint8_t)(Get_State().name) - 7; // replaces with the song 
-    //get the album file and song_file based on the struct
-    
-    // Load album cover from SD and load into bitmap array
-    // Call function that opens song file and sets flag8
-    flag8 = 1;
-    // depending if your in the main menu or music state  - you redraw only the right side 
-    // if you are in the now playing state then you redraw that whole thing 
+	if (input == 5){
+			//first set the SongStrIndex based on the state 
+			SongStrIndex =  (uint8_t)(Get_State().name) - 7; // replaces with the song 
+			//get the album file and song_file based on the struct
+			
+			// Load album cover from SD and load into bitmap array
+			// Call function that opens song file and sets flag8
+			flag8 = 1;
+			// depending if your in the main menu or music state  - you redraw only the right side 
+			// if you are in the now playing state then you redraw that whole thing 
+	}
 };
 
 void screen_clear(uint8_t input){
