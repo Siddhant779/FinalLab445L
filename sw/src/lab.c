@@ -62,6 +62,7 @@ controls file - buttons deals with that
 #include "Display.h"
 #include "Messages.h"
 #include "FSM.h"
+#include "./inc/Timer5A.h"
 // port b 6
 
 /** MMAP Pin definitions. */
@@ -71,26 +72,15 @@ controls file - buttons deals with that
 #define PF3   (*((volatile uint32_t *)0x40025020)) // GREEN LED
 #define PF4   (*((volatile uint32_t *)0x40025040)) // Right Button
 	
-#define BITBUFSIZE16 14400
-
 void Pause(void);
 void DelayWait10ms(uint32_t n);
 
 static FATFS g_sFatFs;
-FIL Handle2;
 FRESULT MountFresult;
-FRESULT Fresult;
 
-uint16_t Bitmap[BITBUFSIZE16];
-
-const char LightsFilename[] = "Lights.bin";   // 8 characters or fewer
-
-const char TakeFilename[] = "TakeFive.bin";   // 8 characters or fewer
 
 //we are going to have to map the album cover to teh sonsg - we would ahve to use 
-UINT successfulreads, successfulwrites;
 
-void LoadBitmap(char Filename[]);
 
 int main(void) {
     /* Disable interrupts for initialization. */
@@ -102,6 +92,9 @@ int main(void) {
     /* Allow us to talk to the PC via PuTTy! Check device manager to see which
        COM serial port we are on. The baud rate is 115200 chars/s. */
     UART_Init();
+    UART5_Init();
+    Reset_8266();
+    SetupWiFi();
 
     /* Initialize all ports. */
     Unified_Port_Init();
@@ -113,180 +106,94 @@ int main(void) {
     /* Start RGB flashing. WARNING! BRIGHT FLASHING COLORS. DO NOT RUN IF YOU HAVE EPILEPSY. */
     //RGBInit();
 		
-		/* Initialize buttons */
-		switch_init();
-	
-		/* Initialize music driver */
-		//music_init();
+    /* Initialize buttons */
+    switch_init();
+
+    /* Initialize music driver */
+    //SongStrIndex = 0;
+    music_init();
     message_init();
 		
-		FSM_Init();
+    FSM_Init();
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
     ILI9341_fillScreen(ILI9341_WHITE);
-    //x is up to 320 and y is up to 240 - for drawing pixel
 	
-    // ILI9341_OutStringSize("Song 1:hello by TPOD gang\n""Song 2\n", 2);
-	//   ILI9341_OutStringSize("Song 1\n""Song 2", 1);
-	  uint8_t c, x, y;
-		
 
-    //drawMainMenu();
-    //Delay1ms(10000);
-    //drawSettingsPage();
-    // Delay1ms(10000);
-    //drawMusicPage();
-    // Delay1ms(10000);
-    //drawNowPlayingPage();
-    // Delay1ms(10000);
+    front8 = Buf2; // buffer being output to DAC
+    back8 = Buf;   // buffer being written to from SDC
+    Count8 = 0;
+    flag8 = 0; // 1 means need data into back
+    BufCount8 = 0;
+    done_song = 0;
+    stop_dac = 0;
 
-   front8 = Buf2; // buffer being output to DAC
-  back8 = Buf;   // buffer being written to from SDC
-  Count8 = 0;
-  flag8 = 1; // 1 means need data into back
-  BufCount8 = 0;
-  done_song = 0;
-  stop_dac = 0;
-    //ILI9341_SetCursor(50,6);
-    //ILI9341_OutStringSize("testing color",ILI9341_BLACK, 2);
 
 
     MountFresult = f_mount(&g_sFatFs, "", 0);
     if(MountFresult){
         //ILI9341_DrawString(52, 0, "f_mount error",0x03E0 , 2);
     }
-    Fresult = f_open(&Handle2, LightsFilename, FA_READ);
-    if(Fresult){
-        //ILI9341_DrawString(52, 0, "testFile error",0x03E0 , 2);
-    }
-		if(Fresult == FR_OK) {
-			//ILI9341_DrawString(52, 0, "opened music file ",0x03E0 , 2);
-		}
+    
 
-    //LoadBitmap("weekIMre.bin");
+    LoadBitmap(Songs[SongStrIndex].album_file);
+    replacealbumCover(Get_State().name, false);
 
-    ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);
-    ILI9341_DrawBitmap(15,145,Bitmap, 120, 120);
-    // x = 300;
-    // y = 150;
-    // uint8_t *read_str;
-	// char *string_part;
-    // if(Fresult == FR_OK){
-    //     ILI9341_DrawString(52, 0, "opened testfile ",0x03E0 , 2);
-	// 			Fresult = f_read(&Handle2, &c, 1, &successfulreads);
-	// 				if((Fresult == FR_OK) && (successfulreads == 1)) {
-	// 						ILI9341_DrawCharS(x, y, c, 0x03E0, ILI9341_BLACK, 1);
-	// 						//string_part+="/0";
-    //           //ILI9341_DrawString(52, 10, string_part,0x03E0, 2);
-	// 				}
-	// 				y-=15;
-    // }
-
-    // this is code for music part 
-        while(1){
-            //could check if need to draw flag here. If so, Fill screen white
-            //set needtoDraw in FSMController when state transitions to a new menu, like all the back button tran
-						if (get_clear_flag()){
-							ILI9341_fillScreen(ILI9341_WHITE);
-							set_clear_flag(0);
-						}
-            State_t current_state = Get_State();
-            switch(current_state.name){
-                case menu_mus:
-                case menu_msg:
-                case menu_set:
-                case menu_play:
-                case menu_pl:
-                case menu_fa:
-                case menu_re:
-                    drawMainMenu(current_state.name);
-                    break;
-                case song1:
-                case song2:
-                case song3:
-                case song4:
-                case song5:
-                case song6:
-                case song7:
-                case mus_pl:
-                case mus_fa:
-                case mus_re:
-                case mus_ba:
-                    drawMusicPage(current_state.name);
-                    break;
-                case np_pl:
-                case np_fa:
-                case np_re:
-                case np_ba:
-                    drawNowPlayingPage(current_state.name);
-                    break;
-                case set_col:
-                case set_wifi:
-                case set_bck:
-                    drawSettingsPage(current_state.name);
-                    break;
-                case msg_bck:
-                case msg_key:
-                    display_keys();
-                    break;
-            }
-            if(flag8){ // 1 means need data
-            flag8 = 0;
-						
-        // 1.5ms to 1.6ms to read 512 bytes 
-            Fresult = f_read(&Handle2, back8, BUFSIZE8,
-                &successfulreads);
-            if(Fresult){
-                //ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
-                while(1){};
-            }
-            BufCount8++;
-						//if(BufCount8%COUNT) // Increasse length of progress bar
-            if(BufCount8 == NUMBUF8){ // could have seeked
-                Fresult = f_close(&Handle2);
-								done_song = 1;
-                Fresult = f_open(&Handle2, LightsFilename, FA_READ);
-                BufCount8 = 0;
-								//memset(Buf2, 0, 512);
-            }
-            }
+    // Main while loop of system
+    while(1){
+        //could check if need to draw flag here. If so, Fill screen white
+        //set needtoDraw in FSMController when state transitions to a new menu, like all the back button tran
+        State_t current_state = Get_State();
+        if (get_clear_flag()){
+            ILI9341_fillScreen(ILI9341_WHITE);
+            replacealbumCover(current_state.name, true);
+            set_clear_flag(0);
+        }
+        switch(current_state.name){
+            case menu_mus:
+            case menu_msg:
+            case menu_set:
+            case menu_play:
+            case menu_pl:
+            case menu_fa:
+            case menu_re:
+                drawMainMenu(current_state.name);
+                break;
+            case song1:
+            case song2:
+            case song3:
+            case song4:
+            case song5:
+            case song6:
+            case song7:
+            case mus_pl:
+            case mus_fa:
+            case mus_re:
+            case mus_ba:
+                drawMusicPage(current_state.name);
+                break;
+            case np_pl:
+            case np_fa:
+            case np_re:
+            case np_ba:
+                drawNowPlayingPage(current_state.name);
+                break;
+            case set_col:
+            case set_wifi:
+            case set_bck:
+                drawSettingsPage(current_state.name);
+                break;
+            case msg_bck:
+            case msg_key:
+                display_keys();
+                break;
+        }
+        if(flag8){ // 1 means need data
+            buf_song();
+        }
         // other tasks
-  }
-
-
-
-    /* Print starting message to the PC and the ST7735. */
-    //ST7735_FillScreen(ST7735_BLACK);
-    //ST7735_SetCursor(0, 0);
-    //ST7735_OutString(
-    //    "ECE445L Final lab.\n"
-     //   "Press SW1 to start.\n");
-    UART_OutString(
-        "ECE445L Final lab.\r\n"
-        "Press SW1 to start.\r\n");
-    //Pause();
-
-    /* Stop RGB and turn off any on LEDs. */
-    PF1 = 0;
-    PF2 = 0;
-    PF3 = 0;
-
-    /* Reset screen. */
-    //ST7735_FillScreen(ST7735_BLACK);
-    //ST7735_SetCursor(0, 0);
-    //ST7735_OutString("Starting...\n");
-    UART_OutString("Starting...\r\n");
-		
-		//load_song(TakeFive, 79749);
-		//unpause_song();
-	
-    while (1) {
-			/* TODO: Write your code here! */
-			//DelayWait10ms(50);
-			//printf("DacOut: %u\n", DacData);
     }
-    return 1;
 }
 
 /** Function Implementations. */
@@ -308,21 +215,4 @@ void Pause(void) {
     while (PF4 == 0x10) {
         DelayWait10ms(10);
     }
-}
-
-
-void LoadBitmap(char Filename[]) {
-	Fresult = f_open(&Handle2, Filename, FA_READ);
-	if(Fresult){
-    ILI9341_DrawString(52, 0, "bitmap file error",0x03E0 , 2);
-  }
-	if(Fresult == FR_OK) {
-		ILI9341_DrawString(52, 0, "opened bitmap file ",0x03E0 , 2);
-	}
-	
-	Fresult = f_read(&Handle2, Bitmap, BITBUFSIZE16*2, &successfulreads);
-	if(Fresult){
-		ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
-		while(1){};
-	}
 }

@@ -389,19 +389,9 @@
               <FilePath>..\inc\DAC.c</FilePath>
             </File>
             <File>
-              <FileName>Dump.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\inc\Dump.c</FilePath>
-            </File>
-            <File>
               <FileName>LaunchPad.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\inc\LaunchPad.c</FilePath>
-            </File>
-            <File>
-              <FileName>LED.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\inc\LED.c</FilePath>
             </File>
             <File>
               <FileName>PLL.c</FileName>
@@ -439,16 +429,6 @@
               <FilePath>..\inc\Timer1A.c</FilePath>
             </File>
             <File>
-              <FileName>Timer1A.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\inc\Timer1A.h</FilePath>
-            </File>
-            <File>
-              <FileName>Timer2A.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\inc\Timer2A.h</FilePath>
-            </File>
-            <File>
               <FileName>Timer4A.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\inc\Timer4A.c</FilePath>
@@ -459,29 +439,9 @@
               <FilePath>..\inc\Timer3A.c</FilePath>
             </File>
             <File>
-              <FileName>Timer3A.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\inc\Timer3A.h</FilePath>
-            </File>
-            <File>
-              <FileName>Clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\inc\Clock.c</FilePath>
-            </File>
-            <File>
-              <FileName>Clock.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\inc\Clock.h</FilePath>
-            </File>
-            <File>
               <FileName>esp8266_base.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\inc\esp8266_base.c</FilePath>
-            </File>
-            <File>
-              <FileName>esp8266_base.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\inc\esp8266_base.h</FilePath>
             </File>
             <File>
               <FileName>tm4c123gh6pm.h</FileName>
@@ -494,35 +454,15 @@
               <FilePath>..\inc\UART5.c</FilePath>
             </File>
             <File>
-              <FileName>UART5.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\inc\UART5.h</FilePath>
+              <FileName>Timer5A.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\inc\Timer5A.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>lib</GroupName>
           <Files>
-            <File>
-              <FileName>eDisk.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\lib\SD\eDisk.h</FilePath>
-            </File>
-            <File>
-              <FileName>ff.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\lib\SD\ff.h</FilePath>
-            </File>
-            <File>
-              <FileName>ffconf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\lib\SD\ffconf.h</FilePath>
-            </File>
-            <File>
-              <FileName>integer.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\lib\SD\integer.h</FilePath>
-            </File>
             <File>
               <FileName>eDisk.c</FileName>
               <FileType>1</FileType>
@@ -542,11 +482,6 @@
               <FileName>SD.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\lib\SD\SD.c</FilePath>
-            </File>
-            <File>
-              <FileName>SD.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\lib\SD\SD.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -569,11 +504,6 @@
               <FilePath>.\Music.c</FilePath>
             </File>
             <File>
-              <FileName>ILI9341.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\ILI9341.h</FilePath>
-            </File>
-            <File>
               <FileName>ILI9341.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ILI9341.c</FilePath>
@@ -584,34 +514,14 @@
               <FilePath>.\Display.c</FilePath>
             </File>
             <File>
-              <FileName>Display.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Display.h</FilePath>
-            </File>
-            <File>
               <FileName>Messages.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Messages.c</FilePath>
             </File>
             <File>
-              <FileName>Messages.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Messages.h</FilePath>
-            </File>
-            <File>
-              <FileName>Switch.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Switch.h</FilePath>
-            </File>
-            <File>
               <FileName>FSM.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FSM.c</FilePath>
-            </File>
-            <File>
-              <FileName>FSM.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FSM.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -59,8 +59,8 @@ void drawMainMenu(enum StateName menu){
    // you can also do bytes_done/ bytes_total - decimal part (100 + 25) - how much finished is starting position 
 	ILI9341_drawHLine(75, 217, 50, ILI9341_RED, 3);
 		
-	ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);
-
+	//ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);
+    //replacealbumCover(menu, false);
     // for drawing bitmap need to change this part 
     // if(SongStrIndex == 0) {
     //     ILI9341_DrawBitmap(15,145,weeknd, 120, 120);
@@ -101,8 +101,6 @@ void drawNowPlayingPage(enum StateName menu) {
     color = (menu == np_ba) ? ILI9341_BLUE : ILI9341_BLACK;
     ILI9341_OutStringSize("Back",color, 2);
 
-    ILI9341_fillRect(150, 50, 120, 120, ILI9341_WHITE);    
-    //ILI9341_DrawBitmap(150,170,weeknd, 120, 120);
 
     ILI9341_SetCursor(20, 6);
     ILI9341_OutStringSize(Songs[SongStrIndex].song_name,ILI9341_BLACK, 1);
@@ -181,19 +179,7 @@ void drawMusicPage(enum StateName menu){
    // you can also do bytes_done/ bytes_total - decimal part (100 + 25) - how much finished is starting position 
 	ILI9341_drawHLine(75, 217, 50, ILI9341_RED, 3);
 	
-	ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);    
-	// if(SongStrIndex == 0) {
-    //     ILI9341_DrawBitmap(15,145,weeknd, 120, 120);
-    // }    
-    // else if(SongStrIndex == 1) {
-    //     ILI9341_DrawBitmap(15,145,creep, 120, 120);
-    // }   
-    // else if(SongStrIndex == 2) {
-    //     ILI9341_DrawBitmap(15,145,takeFive, 120, 120);
-    // }   
-
-
-    ILI9341_SetCursor(52,23);
+    ILI9341_SetCursor(4,2);
      color = (menu == mus_ba) ? ILI9341_BLUE : ILI9341_BLACK;
     ILI9341_OutStringSize("Back",color, 1);
 

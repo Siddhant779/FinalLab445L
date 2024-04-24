@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "FSM.h"
+
 
 extern uint16_t Volume;
 extern uint16_t DacData;
@@ -20,6 +22,8 @@ extern uint8_t done_song;
 extern uint8_t stop_dac;
 extern uint32_t counterSong;
 
+#define BITBUFSIZE16 10000
+
 typedef struct Music{
     char *album_file; // name of the file to read from sd card for album bitmap image
     char *song_file; // name of the file to read from sd card for song 
@@ -31,17 +35,17 @@ typedef struct Music{
 
 } Music;
 
-extern Music Songs[3];
+extern const Music Songs[3];
 
 extern uint8_t SongStrIndex;
 // Initialize music driver
 void music_init(void);
 
-// Load a song in the form of an array
-// Inputs: 
-// 1) song: An song in array form (converted from a wav file)
-// 2) length: The length of the array
-void load_song(const uint16_t* song, uint32_t length);
+// Open the current song file from SD card
+void load_song(void);
+
+// Close the current song file
+void close_song(void);
 
 // Pause whatever song is currently playing
 void pause_song(void);
@@ -55,3 +59,12 @@ void rewind_song(void);
 // Check whether a song is currently playing
 // Returns true if a song is playing, returns false otherwise
 bool is_playing(void);
+
+// Buffer in the next chunk of the song
+void buf_song(void);
+
+void replacealbumCover(enum StateName menu, bool replace);
+
+
+void LoadBitmap(char Filename[]);
+

@@ -6,6 +6,10 @@
 #include "./inc/Timer2A.h"
 #include "./inc/Timer3A.h"
 #include "../inc/tm4c123gh6pm.h"
+#include "../lib/SD/eDisk.h"
+#include "../lib/SD/ff.h"
+#include "Display.h"
+
 
 //#define PB5		(*((volatile uint32_t *)0x40005080))
 
@@ -13,7 +17,6 @@ const uint16_t *SongArray;
 uint32_t SongIndex;
 uint32_t SongLength;
 uint16_t Volume;
-uint16_t DacData;
 uint32_t counterSong;
 
 
@@ -28,16 +31,26 @@ uint8_t done_song;
 uint8_t stop_dac;
 uint8_t SongStrIndex;
 
+uint16_t Bitmap[BITBUFSIZE16];
+
+UINT successfulreads, successfulwrites;
+
 void adc_init(void);
 void send_to_dac(void);
 void update_volume(void);
 uint16_t ADC_In(void);
 
+FIL Handle2;
+FRESULT Fresult;
 
-Music Songs[3] = {
-    {"weekIM", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
-	{"creepIM", "Creep.bin", "Creep", "Radiohead", "Pablo Honey", 2610720},
-	{"takeFiIM", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184}
+
+const Music Songs[3] = {
+    {"weekIM.bin", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
+	{"creepIM.bin", "Creep.bin", "Creep", "Radiohead", "Pablo Honey", 2610720},
+	{"takeFiIM.bin", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184}
+	//{"denimIM.bin", "Denim.bin", "Japanese Denim", "Daniel Caesar", "Acoustic Break", 2986086},
+	//{"hotelIM.bin", "Hotel.bin", "Hotel California", "Eagles", "Hotel California", 4302432},
+	//{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Hotel California", 4302432},
 };
 
 void music_init(void) {
@@ -45,21 +58,11 @@ void music_init(void) {
 	SongStrIndex = 0;
 	dac_init();
 	adc_init();
-	Timer2A_Init(&send_to_dac, 7256, 5);
+	Timer2A_Init(&send_to_dac, 7256, 1);
 	Timer2A_Stop();
 }
 
 void send_to_dac(void) {
-	// if(SongIndex < SongLength) {
-	// 	DacData = (SongArray[SongIndex]*Volume)/2000;
-	// 	dac_output(DacData);
-	// 	SongIndex++;
-	// }
-	// else {
-	// 	Timer2A_Stop();
-	// 	SongIndex = 0;
-	// 	// TO-DO: Handle case for when the song ends
-	// }
 	if(stop_dac == 0) {
 		uint16_t data = front8[Count8]<<4; // shifted into MSbits
 		dac_output((data*Volume)/2000); // 12 bit
@@ -86,10 +89,40 @@ void send_to_dac(void) {
 
 }
 
-void load_song(const uint16_t* song, uint32_t length) {
-	SongIndex = 0;
-	SongLength = length;
-	SongArray = song;
+void load_song(void) {
+	//TO-DO: Open the song bin currently pointed to by SongStrIndex
+	Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
+    if(Fresult){
+        ILI9341_DrawString(52, 0, "testFile error",0x03E0 , 2);
+    }
+    if(Fresult == FR_OK) {
+        //ILI9341_DrawString(52, 0, "opened music file ",0x03E0 , 2);
+    }
+	unpause_song();
+}
+
+void close_song(void) {
+	// TO-DO: Close the song file currently pointed to by SongStrIndex
+	Fresult = f_close(&Handle2);
+}
+
+void buf_song(void) {
+	flag8 = 0;
+	// 1.5ms to 1.6ms to read 512 bytes
+	Fresult = f_read(&Handle2, back8, BUFSIZE8,
+		&successfulreads);
+	if(Fresult){
+		ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
+		while(1){};
+	}
+	BufCount8++;
+	//if(BufCount8%COUNT) // Increasse length of progress bar
+	if(BufCount8 == NUMBUF8){ // could have seeked
+		Fresult = f_close(&Handle2);
+		done_song = 1;
+		Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
+		BufCount8 = 0;
+	}
 }
 
 void pause_song(void) {
@@ -102,7 +135,6 @@ void unpause_song(void) {
 
 void rewind_song(void) {
 	Timer2A_Stop();
-	SongIndex = 0;
 }
 
 bool is_playing(void) {
@@ -138,4 +170,55 @@ uint16_t ADC_In(void){
 	data = ADC0_SSFIFO3_R&0xFFF; // Read data
 	ADC0_ISC_R = 0x0008; // Clear flag to signal done with reading data
 	return data;
+}
+
+
+
+void LoadBitmap(char Filename[]) {
+	Fresult = f_open(&Handle2, Filename, FA_READ);
+	if(Fresult){
+    ILI9341_DrawString(52, 0, "bitmap file error",0x03E0 , 2);
+  }
+	if(Fresult == FR_OK) {
+		//ILI9341_DrawString(52, 0, "opened bitmap file ",0x03E0 , 2);
+	}
+	
+	Fresult = f_read(&Handle2, Bitmap, BITBUFSIZE16*2, &successfulreads);
+	if(Fresult){
+		ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
+		while(1){};
+	}
+    Fresult = f_close(&Handle2);
+}
+
+
+void replacealbumCover(enum StateName menu, bool replace) {
+	if(menu >= menu_mus && menu <= mus_ba) {
+		if(replace) {
+			ILI9341_fillRect(15, 30, 100, 100, ILI9341_WHITE);
+		}
+		ILI9341_DrawBitmap(15,145,Bitmap, 100, 100);
+	}
+	else if(menu >= np_pl && menu <= np_ba){
+		if(replace) {
+			ILI9341_fillRect(15, 30, 110, 110, ILI9341_WHITE);
+		}
+    	ILI9341_DrawBitmap(150,170,Bitmap, 100, 100);
+
+		ILI9341_SetCursor(20, 6);
+		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+		ILI9341_SetCursor(20, 6);
+		ILI9341_OutStringSize(Songs[SongStrIndex].song_name,ILI9341_BLACK, 1);
+			
+		ILI9341_SetCursor(20, 7);
+		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+		ILI9341_SetCursor(20, 7);
+		ILI9341_OutStringSize(Songs[SongStrIndex].album_name,ILI9341_BLACK, 1);
+			
+		ILI9341_SetCursor(20, 8);
+		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+		ILI9341_SetCursor(20, 8);
+		ILI9341_OutStringSize(Songs[SongStrIndex].artist_name,ILI9341_BLACK, 1);
+	}
+    
 }

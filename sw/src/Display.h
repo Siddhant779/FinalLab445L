@@ -6,14 +6,13 @@
 #include "ILI9341.h"
 #include "FSM.h"
 
-extern void drawSettingsPage(enum StateName menu);
+void drawSettingsPage(enum StateName menu);
 
-extern void drawMusicPage(enum StateName menu);
+void drawMusicPage(enum StateName menu);
 
-extern void drawNowPlayingPage(enum StateName menu);
+void drawNowPlayingPage(enum StateName menu);
 
-extern void drawMainMenu(enum StateName menu);
-
+void drawMainMenu(enum StateName menu);
 
 
  
