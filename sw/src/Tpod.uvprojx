@@ -613,6 +613,16 @@
               <FileType>5</FileType>
               <FilePath>.\Switch.h</FilePath>
             </File>
+            <File>
+              <FileName>FSM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FSM.c</FilePath>
+            </File>
+            <File>
+              <FileName>FSM.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FSM.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

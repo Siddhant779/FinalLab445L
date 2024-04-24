@@ -26,13 +26,13 @@ int flag8; // 1 means need data into back
 uint32_t BufCount8; // 0 to NUMBUF8-1
 uint8_t done_song;
 uint8_t stop_dac;
+uint8_t SongStrIndex;
 
 void adc_init(void);
 void send_to_dac(void);
 void update_volume(void);
 uint16_t ADC_In(void);
 
-uint8_t SongStrIndex = 0;
 
 Music Songs[3] = {
     {"weekIM", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
@@ -42,6 +42,7 @@ Music Songs[3] = {
 
 void music_init(void) {
 	// PB5 is initialized as an analog input in Unified_Port_Init, so there is no need to reinitialize it here
+	SongStrIndex = 0;
 	dac_init();
 	adc_init();
 	Timer2A_Init(&send_to_dac, 7256, 5);

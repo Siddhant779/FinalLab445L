@@ -63,6 +63,7 @@ controls file - buttons deals with that
 #include "../lib/SD/ff.h"
 #include "Display.h"
 #include "Messages.h"
+#include "FSM.h"
 // port b 6
 
 /** MMAP Pin definitions. */
@@ -119,6 +120,7 @@ int main(void) {
 	
 		/* Initialize music driver */
 		//music_init();
+    message_init();
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
@@ -129,168 +131,6 @@ int main(void) {
 	//   ILI9341_OutStringSize("Song 1\n""Song 2", 1);
 	  uint8_t c, x, y;
 		
-
-
-// this is for settings page 
-    // ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
-    // ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
-    // ILI9341_drawHLine(0, 12, 320, ILI9341_BLACK, 2);
-    
-    // ILI9341_SetCursor(52,2);
-    // ILI9341_OutStringSize("Colors",ILI9341_BLACK, 2);
-    // ILI9341_drawHLine(160, 44, 160, ILI9341_BLACK, 2);
-
-    // ILI9341_SetCursor(52,5);
-    // ILI9341_OutStringSize("WiFi",ILI9341_BLACK, 2);
-    // ILI9341_drawHLine(160, 74, 160, ILI9341_BLACK, 2);
-
-    // ILI9341_SetCursor(52,23);
-    // ILI9341_OutStringSize("Back",ILI9341_BLACK, 1);
-
-		
-
-
-
-
-
-
-// for the music page 
-//     ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
-//     ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
-//     ILI9341_drawHLine(0, 12, 320, ILI9341_BLACK, 2);
-		
-
-//     ILI9341_SetCursor(52,2);
-//     ILI9341_OutStringSize("Blinding Lights",ILI9341_BLACK, 1);
-//     ILI9341_SetCursor(52,3);
-//     ILI9341_OutStringSize("The Weeknd",ILI9341_BLACK, 1);
-//     ILI9341_drawHLine(160, 44, 160, ILI9341_BLACK, 2);
-
-//     ILI9341_SetCursor(52,5);
-//     ILI9341_OutStringSize("Creep",ILI9341_BLACK, 1);
-//     ILI9341_SetCursor(52,6);
-//     ILI9341_OutStringSize("Radiohead",ILI9341_BLACK, 1);
-//     ILI9341_drawHLine(160, 74, 160, ILI9341_BLACK, 2);
-
-
-//     ILI9341_SetCursor(52,8);
-//     ILI9341_OutStringSize("Take Five",ILI9341_BLACK, 1);
-//     ILI9341_SetCursor(52,9);
-//     ILI9341_OutStringSize("Dave Brubeck",ILI9341_BLACK, 1);
-//     ILI9341_drawHLine(160, 104, 160, ILI9341_BLACK, 2);
-
-//     ILI9341_SetCursor(14,18);
-//     ILI9341_OutStringSize("||",ILI9341_BLACK, 2);
-		
-// 		ILI9341_SetCursor(8,18);
-//     ILI9341_OutStringSize(">|",ILI9341_BLACK, 2);
-		
-// 		ILI9341_SetCursor(20,18);
-//     ILI9341_OutStringSize("|<",ILI9341_BLACK, 2);
-		
-// 		ILI9341_drawHLine(25, 220, 100, ILI9341_BLACK, 2);
-// 		// using hte bytes of the song you can see how much time is left 
-// 		// do it in dac_out - have a counter 25+((1-(bytes_done/bytes_total))*100) - for the x cord for the length its just (bytes_done/bytes_total)*100
-
-//    // you can also do bytes_done/ bytes_total - decimal part (100 + 25) - how much finished is starting position 
-// 		ILI9341_drawHLine(75, 217, 50, ILI9341_RED, 3);
-		
-// 		ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);    
-// 		ILI9341_DrawBitmap(15,145,weeknd, 120, 120);
-
-//     ILI9341_SetCursor(52,23);
-//     ILI9341_OutStringSize("Back",ILI9341_BLACK, 1);
-
-
-
-
-
-// this is for now playing page 
-
-    // ILI9341_SetCursor(28,19);
-    // ILI9341_OutStringSize("||",ILI9341_BLACK, 2);
-		
-    // ILI9341_SetCursor(22,19);
-    // ILI9341_OutStringSize(">|",ILI9341_BLACK, 2);
-		
-	//   ILI9341_SetCursor(34,19);
-    // ILI9341_OutStringSize("|<",ILI9341_BLACK, 2);
-
-    // ILI9341_drawHLine(160, 217, 70, ILI9341_RED, 3);
-    // ILI9341_drawHLine(90, 220, 140, ILI9341_BLACK, 2);
-
-
-    // ILI9341_DrawStringCord(318, 2, "Now Playing",ILI9341_BLACK, 1);
-    // ILI9341_drawHLine(0, 10, 320, ILI9341_BLACK, 2);
-
-    // ILI9341_SetCursor(52,2);
-    // ILI9341_OutStringSize("Back",ILI9341_BLACK, 2);
-
-    // ILI9341_fillRect(150, 50, 120, 120, ILI9341_WHITE);    
-    // ILI9341_DrawBitmap(150,170,weeknd, 120, 120);
-
-    // ILI9341_SetCursor(20, 6);
-    // ILI9341_OutStringSize("Blinding Lights",ILI9341_BLACK, 1);
-		
-	// ILI9341_SetCursor(20, 7);
-    // ILI9341_OutStringSize("After Hours",ILI9341_BLACK, 1);
-		
-	// ILI9341_SetCursor(20, 8);
-    // ILI9341_OutStringSize("The Weeknd",ILI9341_BLACK, 1);
-		
-		
-
-
-
-
-
-
-        // this is for main menu 
-
-//     ILI9341_drawVLine(160,12,240, ILI9341_BLACK, 2);
-
-// ILI9341_DrawStringCord(318, 2, "Tpod",ILI9341_BLACK, 1);
-//     ILI9341_drawHLine(0, 12, 320, ILI9341_BLACK, 2);
-		
-
-//     ILI9341_SetCursor(52,2);
-//     ILI9341_OutStringSize("Messages",ILI9341_BLACK, 2);
-//     ILI9341_drawHLine(160, 44, 160, ILI9341_BLACK, 2);
-
-//     ILI9341_SetCursor(52,5);
-//     ILI9341_OutStringSize("Music",ILI9341_BLACK, 2);
-//     ILI9341_drawHLine(160, 74, 160, ILI9341_BLACK, 2);
-
-
-//     ILI9341_SetCursor(52,8);
-//     ILI9341_OutStringSize("Settings",ILI9341_BLACK, 2);
-//     ILI9341_drawHLine(160, 104, 160, ILI9341_BLACK, 2);
-
-
-//     ILI9341_SetCursor(52,11);
-//     ILI9341_OutStringSize("Now Playing",ILI9341_BLACK, 2);
-//     ILI9341_drawHLine(160, 134, 160, ILI9341_BLACK, 2);
-
-
-
-//     ILI9341_SetCursor(14,18);
-//     ILI9341_OutStringSize("||",ILI9341_BLACK, 2);
-		
-// 		ILI9341_SetCursor(8,18);
-//     ILI9341_OutStringSize(">|",ILI9341_BLACK, 2);
-		
-// 		ILI9341_SetCursor(20,18);
-//     ILI9341_OutStringSize("|<",ILI9341_BLACK, 2);
-		
-// 		ILI9341_drawHLine(25, 220, 100, ILI9341_BLACK, 2);
-// 		// using hte bytes of the song you can see how much time is left 
-// 		// do it in dac_out - have a counter 25+((1-(bytes_done/bytes_total))*100) - for the x cord for the length its just (bytes_done/bytes_total)*100
-
-//    // you can also do bytes_done/ bytes_total - decimal part (100 + 25) - how much finished is starting position 
-// 		ILI9341_drawHLine(75, 217, 50, ILI9341_RED, 3);
-		
-// 		ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);    
-// 		ILI9341_DrawBitmap(15,145,weeknd, 120, 120);
 
     //drawMainMenu();
     //Delay1ms(10000);
@@ -328,7 +168,6 @@ int main(void) {
 
     ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);
     ILI9341_DrawBitmap(15,145,Bitmap, 120, 120);
-    ILI9341_BL
     // x = 300;
     // y = 150;
     // uint8_t *read_str;
@@ -348,7 +187,48 @@ int main(void) {
 
     // this is code for music part 
         while(1){
-            
+            //could check if need to draw flag here. If so, Fill screen white
+            //set needtoDraw in FSMController when state transitions to a new menu, like all the back button transitions
+            State_t current_state = Get_State();
+            switch(current_state.name){
+                case menu_mus:
+                case menu_msg:
+                case menu_set:
+                case menu_play:
+                case menu_pl:
+                case menu_fa:
+                case menu_re:
+                    drawMainMenu(current_state.name);
+                    break;
+                case song1:
+                case song2:
+                case song3:
+                case song4:
+                case song5:
+                case song6:
+                case song7:
+                case mus_pl:
+                case mus_fa:
+                case mus_re:
+                case mus_ba:
+                    drawMusicPage(current_state.name);
+                    break;
+                case np_pl:
+                case np_fa:
+                case np_re:
+                case np_ba:
+                    drawNowPlayingPage(current_state.name);
+                    break;
+                case set_col:
+                case set_wifi:
+                case set_bck:
+                    drawSettingsPage(current_state.name);
+                    break;
+                case msg_bck:
+                case msg_key:
+                    display_keys();
+                    break;
+            }
             if(flag8){ // 1 means need data
             flag8 = 0;
 						
@@ -399,12 +279,11 @@ int main(void) {
 		
 		//load_song(TakeFive, 79749);
 		//unpause_song();
-	message_init();
+	
     while (1) {
 			/* TODO: Write your code here! */
 			//DelayWait10ms(50);
 			//printf("DacOut: %u\n", DacData);
-			display_keys();
     }
     return 1;
 }

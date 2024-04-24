@@ -15,3 +15,4 @@ void move_coords(uint8_t input);
 void append_message(void);
 void message_init(void);
 void message_erase(void);
+void keys_cursor(uint8_t input);

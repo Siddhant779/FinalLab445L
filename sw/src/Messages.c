@@ -93,7 +93,10 @@ void display_keys(void){
 	ILI9341_OutStringSize("Msg: ", ILI9341_BLACK, 1);//menu stuff
 	ILI9341_OutStringSize(type_message, ILI9341_BLACK, 1);
 	ILI9341_SetCursor(52,1);
-	ILI9341_OutStringSize("Back", ILI9341_BLACK, 2);
+	uint32_t color = ILI9341_BLACK;
+	if ((character.row == -1) || (character.col == -1))
+			color = ILI9341_BLUE;
+	ILI9341_OutStringSize("Back", color, 2);
 	y = 1;
 	x = 35;
 	ILI9341_SetCursor(x,y);
@@ -113,6 +116,16 @@ void change_coords(int row, int col){
 	character.col = col;
 }
 
+void keys_cursor(uint8_t input){
+	if (input < 5 && input > 0){
+		move_coords(input);
+	}
+	else if (input == 5){
+		append_message();
+	}
+
+
+}
 void move_coords(uint8_t input){
 	if (input == 1){ //up
 		if (character.row == 4){ //bottom row to up
@@ -129,23 +142,41 @@ void move_coords(uint8_t input){
 						character.col = 8;
 					}			
 		}
-		if (character.row != 0)
+		else if (character.row != 0)
 				character.row -= 1;
+		else if (character.row == 0 && character.col == 0){ //set to back
+			character.row = -1;
+			character.col = -1;
+		}
 	}
 	else if (input == 2){//right
+
 		if (character.row == 4){
 			if (character.col != 3)
 				character.col += 1;
 		}
+		else if (character.row == -1 && character.col == -1){ //set to 1 again
+			character.row = 0;
+			character.col = 0;
+		}
 		else if (character.col != 9)
-				character.col += 1;
+			character.col += 1;
+		
 	}
 	else if (input == 3){//left
 		if (character.col != 0)
 				character.col -= 1;
+		else if (character.row == 0 && character.col == 0){ //set to back
+			character.row = -1;
+			character.col = -1;
+		}
 	}
 	else if (input == 4){//down
-		if (character.row < 4){
+		if (character.row == -1 && character.col == -1){ //set to back
+			character.row = 0;
+			character.col = 0;
+		}
+		else if (character.row < 4){
 				//for bottom row
 				if (character.row == 3){
 					if (character.col == 0 || character.col == 1 || character.col == 2){
@@ -163,6 +194,7 @@ void move_coords(uint8_t input){
 				}
 				character.row += 1;
 		}
+
 
 	}
 

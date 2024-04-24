@@ -2,7 +2,9 @@
 #include "FSM.h"
 #include "./inc/tm4c123gh6pm.h"
 #include "Display.h"
+#include "Music.h"
 #include <stdint.h>
+#include "Messages.h"
 
 /*
 Inputs:
@@ -12,14 +14,14 @@ Inputs:
 3 = Down
 4 = Enter
 */ 
-State_t FSM[26] = {
+State_t FSM[27] = {
     {menu_mus, &Do_Nothing, {menu_play, menu_re, menu_mus, menu_msg, song1}},
     {menu_msg, &Do_Nothing, {menu_mus, menu_re, menu_msg, menu_set, msg_key}},
-    {menu_set, &Do_Nothing, {menu_msg, menu_re, menu_set, menu_play, menu_mus}},
-    {menu_play, &Do_Nothing, {menu_set, menu_re, menu_play, menu_mus, menu_mus}},
-    {menu_pl, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {menu_fa, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {menu_re, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
+    {menu_set, &Do_Nothing, {menu_msg, menu_re, menu_set, menu_play, set_col}},
+    {menu_play, &Do_Nothing, {menu_set, menu_re, menu_play, menu_mus, np_pl}},
+    {menu_pl, &Play_pause, {menu_pl, menu_fa, menu_re, menu_pl, menu_pl}},
+    {menu_fa, &Next_song, {menu_fa, menu_fa, menu_pl, menu_fa, menu_fa}},
+    {menu_re, &Rewind_song, {menu_re, menu_pl, menu_mus, menu_re, menu_re}},
     {song1, &Do_Nothing, {song7, mus_re, song1, song2, song1}},
     {song2, &Do_Nothing, {song1, mus_re, song2, song3, song2}},
     {song3, &Do_Nothing, {song2, mus_re, song3, song4, song3}},
@@ -27,17 +29,18 @@ State_t FSM[26] = {
     {song5, &Do_Nothing, {song4, mus_re, song5, song6, song5}},
     {song6, &Do_Nothing, {song5, mus_re, song6, song7, song6}},
     {song7, &Do_Nothing, {song6, mus_re, song7, song1, song7}},
-    {mus_pl, &Do_Nothing, {mus_pl, menu_fa, menu_re, mus_pl, mus_pl}},
-    {mus_fa, &Do_Nothing, {mus_fa, menu_fa, mus_pl, mus_fa, mus_fa}},
-    {mus_re, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {mus_ba, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {np_pl, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {np_fa, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {np_re, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {np_ba, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {set_col, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {set_wifi, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}},
-    {msg_key, &Do_Nothing, {msg_key, msg_key, msg_key, msg_key, msg_key}},
+    {mus_pl, &Play_pause, {mus_ba, mus_fa, mus_re, mus_pl, mus_pl}},
+    {mus_fa, &Next_song, {mus_ba, mus_fa, mus_pl, mus_fa, mus_fa}},
+    {mus_re, &Rewind_song, {mus_ba, mus_pl, song1, mus_re, mus_re}},
+    {mus_ba, &Do_Nothing, {mus_ba, mus_ba, song1, mus_fa, menu_mus}},
+    {np_pl, &Play_pause, {np_ba, np_fa, np_re, np_pl, np_pl}},
+    {np_fa, &Next_song, {np_ba, np_fa, np_pl, np_fa, np_fa}},
+    {np_re, &Rewind_song, {np_ba, np_pl, np_ba, np_re, np_re}},
+    {np_ba, &Do_Nothing, {np_ba, np_re, np_ba, np_re, menu_mus}},
+    {set_col, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
+    {set_wifi, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
+    {set_bck, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
+    {msg_key, &keys_cursor, {msg_key, msg_key, msg_key, msg_key, msg_key}},
     {msg_bck, &Do_Nothing, {menu_mus, msg_key, menu_mus, msg_key, menu_mus}},
 };
 
@@ -52,14 +55,48 @@ State_t Get_State(){
 		return current_state;
 }
 
-void Set_state(StateName name){
-    current_state = nme
+void Set_state(enum StateName name){
+    current_state = FSM[name];
 }
 
+/*
+Inputs:
+1 = Up
+2 = Right
+3 = Left
+4 = Down
+5 = Enter
+*/ 
 void FSM_Controller(uint8_t input){
     (*(current_state.func))(input); //do function based on input
     current_state = FSM[current_state.Next[input-1]]; //change state
 }
+
 void Do_Nothing(uint8_t input){
-		return;
+	return;
 }
+
+void Play_pause(uint8_t input) {
+    if(is_playing()) pause_song();
+    else unpause_song();
+}
+
+void Rewind_song(uint8_t input) {
+    rewind_song();
+}
+
+void Next_song(uint8_t input) {
+    // Load and start the next song in the list
+}
+
+void Start_song(uint8_t input) {
+    //first set the SongStrIndex based on the state 
+    SongStrIndex =  (uint8_t)(Get_State().name) - 7; // replaces with the song 
+    //get the album file and song_file based on the struct
+    
+    // Load album cover from SD and load into bitmap array
+    // Call function that opens song file and sets flag8
+    flag8 = 1;
+    // depending if your in the main menu or music state  - you redraw only the right side 
+    // if you are in the now playing state then you redraw that whole thing 
+};

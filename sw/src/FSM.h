@@ -28,6 +28,7 @@ enum StateName{
     np_ba, // Back button to menu within Now-Playing
     set_col, // Changing color option for setting page
     set_wifi, // Wifi option for setting page 
+    set_bck, // Exits settings
     msg_key, // Keyboard button for message page 
     msg_bck // Back button to menu within message page 
 
@@ -49,6 +50,14 @@ void FSM_Controller(uint8_t input);
 
 void Do_Nothing(uint8_t input);
 
-void Set_state(StateName name);
+void Set_state(enum StateName name);
+
+void Start_song(uint8_t input);
+
+void Play_pause(uint8_t input);
+
+void Rewind_song(uint8_t input);
+
+void Next_song(uint8_t input);
 
 #endif
