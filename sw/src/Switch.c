@@ -4,6 +4,7 @@
 #include "Switch.h"
 #include "Music.h"
 #include "Messages.h"
+#include "FSM.h"
 	
 #define PC4		(*((volatile uint32_t *) 0x40006040))	// UP
 #define PC5		(*((volatile uint32_t *) 0x40006080))	// RIGHT
@@ -111,7 +112,9 @@ void GPIOPortC_Handler(void) {
 			input_encoder = 4;
 		}
 	}
-	move_coords(input_encoder); //REPLACE WITH FSM AT SOME POINT
+	if (input_encoder != 0){
+		FSM_Controller(input_encoder);
+	}
 	Timer1Arm();
 }
 
@@ -121,7 +124,7 @@ void GPIOPortF_Handler(void) {
 	if(LastEnter) {
 		// Service enter button
 		input_encoder = 5;
-		append_message();//REPLACE WITH FSM AT SOME POINT
+		FSM_Controller(input_encoder);
 	}
 	Timer1Arm();
 }

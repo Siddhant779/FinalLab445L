@@ -328,6 +328,7 @@ int main(void) {
 
     ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);
     ILI9341_DrawBitmap(15,145,Bitmap, 120, 120);
+    ILI9341_BL
     // x = 300;
     // y = 150;
     // uint8_t *read_str;
@@ -347,6 +348,7 @@ int main(void) {
 
     // this is code for music part 
         while(1){
+            
             if(flag8){ // 1 means need data
             flag8 = 0;
 						
@@ -397,7 +399,7 @@ int main(void) {
 		
 		//load_song(TakeFive, 79749);
 		//unpause_song();
-		message_init();
+	message_init();
     while (1) {
 			/* TODO: Write your code here! */
 			//DelayWait10ms(50);
