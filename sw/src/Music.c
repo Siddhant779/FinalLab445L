@@ -50,7 +50,8 @@ const Music Songs[3] = {
 	{"takeFiIM.bin", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184}
 	//{"denimIM.bin", "Denim.bin", "Japanese Denim", "Daniel Caesar", "Acoustic Break", 2986086},
 	//{"hotelIM.bin", "Hotel.bin", "Hotel California", "Eagles", "Hotel California", 4302432},
-	//{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Hotel California", 4302432},
+	//{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Bewitched", 1869546},
+	//{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Bewitched", 1869546},
 };
 
 void music_init(void) {
