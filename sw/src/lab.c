@@ -90,6 +90,8 @@ const char TakeFilename[] = "TakeFive.bin";   // 8 characters or fewer
 //we are going to have to map the album cover to teh sonsg - we would ahve to use 
 UINT successfulreads, successfulwrites;
 
+void LoadBitmap(char Filename[]);
+
 int main(void) {
     /* Disable interrupts for initialization. */
     DisableInterrupts();
@@ -119,7 +121,7 @@ int main(void) {
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
-    ILI9341_fillScreen(ILI9341_BLACK);
+    ILI9341_fillScreen(ILI9341_WHITE);
     //x is up to 320 and y is up to 240 - for drawing pixel
 	
     // ILI9341_OutStringSize("Song 1:hello by TPOD gang\n""Song 2\n", 2);
@@ -295,11 +297,8 @@ int main(void) {
     // Delay1ms(10000);
     //drawMusicPage();
     // Delay1ms(10000);
-    drawNowPlayingPage();
+    //drawNowPlayingPage();
     // Delay1ms(10000);
-
-
-
 
    front8 = Buf2; // buffer being output to DAC
   back8 = Buf;   // buffer being written to from SDC
@@ -324,7 +323,10 @@ int main(void) {
 			//ILI9341_DrawString(52, 0, "opened music file ",0x03E0 , 2);
 		}
 
+    //LoadBitmap("weekIMre.bin");
 
+    ILI9341_fillRect(15, 25, 120, 120, ILI9341_WHITE);
+    ILI9341_DrawBitmap(15,145,Bitmap, 120, 120);
     // x = 300;
     // y = 150;
     // uint8_t *read_str;

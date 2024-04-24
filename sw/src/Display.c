@@ -2854,6 +2854,23 @@ void drawMusicPage(void){
     ILI9341_OutStringSize(Songs[2].artist_name,ILI9341_BLACK, 1);
     ILI9341_drawHLine(160, 104, 160, ILI9341_BLACK, 2);
 
+    /*
+    11 - 
+    12
+    13
+
+    14
+    15
+    16
+
+    17
+    18
+    19
+
+    20
+    21
+    22
+    */
     ILI9341_SetCursor(14,18);
     ILI9341_OutStringSize("||",ILI9341_BLACK, 2);
 		

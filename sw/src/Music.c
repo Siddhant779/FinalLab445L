@@ -35,9 +35,9 @@ uint16_t ADC_In(void);
 uint8_t SongStrIndex = 0;
 
 Music Songs[3] = {
-    {"weekndIm", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
-	{"creepIm", "Creep.bin", "Creep", "Radiohead", "Pablo Honey", 2610720},
-	{"TakeFIm", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184}
+    {"weekIM", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
+	{"creepIM", "Creep.bin", "Creep", "Radiohead", "Pablo Honey", 2610720},
+	{"takeFiIM", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184}
 };
 
 void music_init(void) {
