@@ -62,6 +62,7 @@ controls file - buttons deals with that
 #include "../lib/SD/eDisk.h"
 #include "../lib/SD/ff.h"
 #include "Display.h"
+#include "Messages.h"
 // port b 6
 
 /** MMAP Pin definitions. */
@@ -105,7 +106,7 @@ int main(void) {
 
     /* Initialize all ports. */
     Unified_Port_Init();
-	  SSI2_Init(4);
+	  //SSI2_Init(4);
 	//ST7735_InitR(INITR_REDTAB);     // Start up display.
     ILI9341_init();
 	//setRotation(3);
@@ -117,7 +118,7 @@ int main(void) {
 		switch_init();
 	
 		/* Initialize music driver */
-		music_init();
+		//music_init();
 
     /* Allows any enabled timers to begin running. */
     EnableInterrupts();
@@ -380,7 +381,7 @@ int main(void) {
     UART_OutString(
         "ECE445L Final lab.\r\n"
         "Press SW1 to start.\r\n");
-    Pause();
+    //Pause();
 
     /* Stop RGB and turn off any on LEDs. */
     RGBStop();
@@ -396,11 +397,12 @@ int main(void) {
 		
 		//load_song(TakeFive, 79749);
 		//unpause_song();
-		
+		message_init();
     while (1) {
 			/* TODO: Write your code here! */
 			//DelayWait10ms(50);
 			//printf("DacOut: %u\n", DacData);
+			display_keys();
     }
     return 1;
 }

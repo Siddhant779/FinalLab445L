@@ -3,6 +3,7 @@
 #include "./inc/tm4c123gh6pm.h"
 #include "Switch.h"
 #include "Music.h"
+#include "Messages.h"
 	
 #define PC4		(*((volatile uint32_t *) 0x40006040))	// UP
 #define PC5		(*((volatile uint32_t *) 0x40006080))	// RIGHT
@@ -77,33 +78,40 @@ void switch_init(void) {
 	LastEnter = PF4;
 }
 
+uint8_t input_encoder;
 /* PortC ISR: Determine which switches were pressed/released and call function for that switch */
 void GPIOPortC_Handler(void) {
 	GPIO_PORTC_IM_R &= ~0xF0;			// Disarm button interrupt
+	input_encoder = 0;
 	// Determine which button(s) were pressed
 	if(GPIO_PORTC_RIS_R&0x10)	{		// Poll PC4
 		if(LastUp) {
 			// Service up button
-			rewind_song();
+			//rewind_song();
+			input_encoder = 1;
 		}
 	}
 	if(GPIO_PORTC_RIS_R&0x20)	{		// Poll PC5
 		if(LastRight) {
 			// Service right button
+			input_encoder = 2;
 		}
 	}
 	if(GPIO_PORTC_RIS_R&0x40)	{		// Poll PC6
 		if(LastLeft) {
 			// Service left button
-			if(is_playing()) pause_song();
-			else unpause_song();
+//			if(is_playing()) pause_song();
+//			else unpause_song();
+			input_encoder = 3;
 		}
 	}
 	if(GPIO_PORTC_RIS_R&0x80)	{		// Poll PC7
 		if(LastDown) {
 			// Service down button
+			input_encoder = 4;
 		}
 	}
+	move_coords(input_encoder); //REPLACE WITH FSM AT SOME POINT
 	Timer1Arm();
 }
 
@@ -112,8 +120,14 @@ void GPIOPortF_Handler(void) {
 	GPIO_PORTF_IM_R &= ~0x10;			// Disarm button interrupt
 	if(LastEnter) {
 		// Service enter button
+		input_encoder = 5;
+		append_message();//REPLACE WITH FSM AT SOME POINT
 	}
 	Timer1Arm();
+}
+
+uint8_t get_input(void){
+	return input_encoder;
 }
 
 /* Timer1A ISR: Save input values after debouncing */

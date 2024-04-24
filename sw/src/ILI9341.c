@@ -877,8 +877,3 @@ void setRotation(uint8_t m) {
     break;
   }
 }
-
-
-
-
-
