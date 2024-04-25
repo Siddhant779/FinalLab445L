@@ -26,10 +26,11 @@
 #define BUFFER_SIZE 												40
 
 typedef struct Message{
-	char msg[BUFFER_SIZE];
+	char* msg;
 	uint8_t owner;				// 0 is recv (current board from current POV) 1 is sender (other board from current POV)
 } Message;
 
+void sendMessage(Message* m);
 
 //------------------- ParseMsg --------------
 // Turns UART message stored in ser_buf into message struct

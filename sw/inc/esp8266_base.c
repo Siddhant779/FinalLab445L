@@ -57,9 +57,9 @@
 
 //#define SKIP_SETUP 0
 
-char    ssid[32]          = "Siddhant";   // Your WiFi Access Point name goes here
-char    pass[32]          = "siddhantbeast";			 			// Your WiFi Access Point password goes here
-char		host[32]					= "172.20.10.10";					// Your remote server host IP goes here
+char    ssid[32]          = "prithvi";   // Your WiFi Access Point name goes here
+char    pass[32]          = "ece445ltpod";			 			// Your WiFi Access Point password goes here
+char		host[32]					= "172.20.10.2";					// Your remote server host IP goes here
 char		port[16]					= "8080";								// Your remote server host port goes here
 
 char    inchar;   
@@ -88,7 +88,6 @@ void Reset_8266(void)
   DelayWait1ms(5000);     // Wait for 8266 to reset
   PE1 = BIT1;             // Enable the 8266
   DelayWait1ms(5000);     // Wait before setting up 8266
-  PE3 = LOW;              // Turn off LED
 }
 
 // ----------------------------------------------------------------------
@@ -98,15 +97,12 @@ void Reset_8266(void)
 
 void SetupWiFi(void) 
 {   
-  
+  UART_OutString("Waiting for ESP RDY.");
   while (!RDY) {      // Wait for ESP8266 indicate it is ready for programming data
-    #ifdef DEBUG1
-    UART_OutString(".");
-    #endif
-    
-    DelayWait1ms(5000);
+    UART_OutChar('.');
+		DelayWait1ms(5000);
   }
-
+	
   UART5_OutString(ssid);          // Send WiFi SSID to ESP8266
   UART5_OutChar(',');
   
@@ -131,19 +127,17 @@ void SetupWiFi(void)
     // UART_OutChar('\n');      
     // #endif
     
-  // while ((RDY) | ((UART5_FR_R & UART5_FR_RXFE) ==	0)) { 
-  //   if ((UART5_FR_R & UART5_FR_RXFE) ==0 ){
-  //       inchar =(UART5_DR_R & 0xFF);      
-	// 		#ifdef DEBUG1
-  //       UART_OutChar(inchar);                        // Output received character
-	// 		#endif
-  //   } else {
-	// 		//ST7735_DrawString(0,8,"waiting", ST7735_Color565(200, 0, 0 ));
-	// 		continue;
-	// 	}
-  // }
-//  ST7735_DrawString(0,8,"Exiting WiFI_Setup", ST7735_Color565(255, 0, 0 ));
-  PE3 = BIT3;
+//	 while ((RDY) | ((UART5_FR_R & UART5_FR_RXFE) ==	0)) { 
+//		 if ((UART5_FR_R & UART5_FR_RXFE) ==0 ){
+//				 inchar =(UART5_DR_R & 0xFF);      
+//			#ifdef DEBUG1
+//				 UART_OutChar(inchar);                        // Output received character
+//			#endif
+//		 } else {
+//			//ST7735_DrawString(0,8,"waiting", ST7735_Color565(200, 0, 0 ));
+//			continue;
+//		}
+//	}
   
   #ifdef DEBUG1
     UART_OutString("Exiting WiFI_Setup routine\r\n");
@@ -191,9 +185,15 @@ void ESP2TM4C(void) {
   if (parse == 0x1) ParseMsg();                         // Call the parser if new Command received
 }
 
-void sendMessage(Message m) {
-	UART5_OutString(m.msg);
-	UART5_OutChar('\n');
+void sendMessage(Message* m) {\
+	UART5_OutChar('~');
+	UART5_OutChar(strlen(m->msg));
+	UART5_OutChar('@');
+	UART5_OutString(m->msg);
+//	UART_OutChar('~');
+//	UART_OutChar(strlen(m->msg)+0x30);
+//	UART_OutChar('@');
+//	UART_OutString(m->msg);
 }
 
 void setSSID(char new_ssid[], uint8_t str_len) {

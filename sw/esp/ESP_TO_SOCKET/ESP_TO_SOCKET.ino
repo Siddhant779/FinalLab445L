@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define     DEBUG1                       // First level of Debug
-#define     DEBUG2                          // Second level of Debug
+// #define     DEBUG1                       // First level of Debug
+// #define     DEBUG2                          // Second level of Debug
 // #define     DEBUG3                       // Third level of Debug
 
 #define RDY 2                               // GPIO_2
@@ -15,6 +15,7 @@ char host[16] = "127.0.0.1";
 char port[5] = "8080";
 
 char ser_buf[SER_BUF_LEN];
+char msg_buf[40];
 
 WiFiClient client;
 
@@ -181,31 +182,37 @@ int get_next_token(char *dest, char *src, const char *delim){
 
 String getSerialMessage() {
   String message = "";
-  
-  while (Serial.available() > 0) {
-    char c = Serial.read();
-    if (c != '\n') {
-      message += c;
-      delay(10);
+
+  while (Serial.available() == 0) {}
+  while(1) {
+    char incomingChar = Serial.read();
+    if (incomingChar == '~') {
+      while (Serial.available() == 0) {}
+      uint8_t length = (uint8_t) Serial.read();
+      while (Serial.available() == 0) {}
+      incomingChar = Serial.read();
+      if (incomingChar == '@') {
+        while (length > 0) {
+          while (Serial.available() == 0) {}
+          incomingChar = Serial.read();
+          message+=incomingChar;
+          length--;
+        }
+        break;
+      }
     }
   }
-
-  // // ACK to TM4C to unblock
-  // Serial.println("ACK");
-  // Serial.flush();
-
+  
   return message;
 }
 
 void tm4c2server(String msg) {
   if (client.connected()) {
-    client.println(msg);
+    client.print(msg);
   }
   else {
     Serial.println("Server communication failed...");
   }
-
-  Serial.flush();
 }
 
 String getClientMessage() {
