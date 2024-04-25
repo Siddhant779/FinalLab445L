@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "./inc/tm4c123gh6pm.h"
+#include "../inc/esp8266_base.h"
 
 typedef struct coord{
 	int8_t row;
@@ -16,3 +17,4 @@ void append_message(void);
 void message_init(void);
 void message_erase(void);
 void keys_cursor(uint8_t input);
+void add_history(Message msg);

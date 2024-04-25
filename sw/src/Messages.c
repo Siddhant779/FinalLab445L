@@ -3,6 +3,7 @@
 #include "ILI9341.h"
 #include <string.h>
 #include "FSM.h"
+#include "../inc/esp8266_base.h"
 
 char (*keys)[4][10];
 
@@ -226,6 +227,13 @@ void append_message(void){
 				need_erase_text = 1;
 			}
 			else if (character.col == 3){//ENTER
+				Message msg;
+				uint8_t str_len = strlen(type_message);
+				strncpy(msg.msg, type_message, BUFFER_SIZE - 1);
+				msg.msg[str_len] = '\n';
+				msg.msg[str_len + 1] = '\0';
+				msg.owner = 0;
+				sendMessage(msg);
 				if (history_idx < 10){
 					history[history_idx] = strncpy(history[history_idx], type_message, message_index);
 					history[history_idx][message_index] = 0;
@@ -250,4 +258,24 @@ void append_message(void){
 			Set_state(menu_msg);
 		}
 	}
+}
+
+void add_history(Message msg){
+				uint8_t length = strlen(msg.msg);
+				if (history_idx < 10){
+					history[history_idx] = strncpy(history[history_idx], msg.msg, length);
+					history[history_idx][message_index] = 0;
+					history_idx++;
+					message_erase();
+				}
+				if (history_idx == 10){
+					char* temp = history[0];
+					for (int i = 0; i < 9; i++){
+						history[i] = history[i+1];
+					}
+					history[9] = temp;
+					history[9] = strncpy(history[9], type_message, message_index);
+					history[9][message_index] = 0;
+					message_erase();
+				}
 }

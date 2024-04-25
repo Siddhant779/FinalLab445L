@@ -1,7 +1,7 @@
 import socket
 import threading
 
-SERVER_HOST = "172.20.10.10"
+SERVER_HOST = "172.20.10.2"
 SERVER_PORT = 8080
 
 class Client():

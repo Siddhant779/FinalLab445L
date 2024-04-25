@@ -30,6 +30,7 @@ typedef struct Message{
 	uint8_t owner;				// 0 is recv (current board from current POV) 1 is sender (other board from current POV)
 } Message;
 
+void sendMessage(Message m);
 
 //------------------- ParseMsg --------------
 // Turns UART message stored in ser_buf into message struct

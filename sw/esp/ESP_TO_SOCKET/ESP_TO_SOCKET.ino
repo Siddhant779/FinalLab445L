@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define     DEBUG1                       // First level of Debug
-#define     DEBUG2                          // Second level of Debug
+// #define     DEBUG1                       // First level of Debug
+// #define     DEBUG2                          // Second level of Debug
 // #define     DEBUG3                       // Third level of Debug
 
 #define RDY 2                               // GPIO_2

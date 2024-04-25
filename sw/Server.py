@@ -1,7 +1,7 @@
 import socket
 import threading
 
-HOST = "172.20.10.10"
+HOST = "172.20.10.2"
 PORT = 8080
 
 client_dict = {}
@@ -60,7 +60,8 @@ def main():
         while True:
             client_socket, client_addr = server_socket.accept()             # Blocking until client connects
             print(f"[+] Accepted connection from {client_addr[0]}:{client_addr[1]}")
-            
+            welcome_msg = "Connection the server established!"
+            client_socket.sendall(welcome_msg.encode())
             handler = ClientHandler(client_socket, unique_num, client_addr[0], client_addr[1])
             client_dict[unique_num] = handler
             unique_num += 1
