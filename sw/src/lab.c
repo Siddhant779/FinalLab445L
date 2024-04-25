@@ -93,10 +93,10 @@ int main(void) {
 
     /* Allow us to talk to the PC via PuTTy! Check device manager to see which
        COM serial port we are on. The baud rate is 115200 chars/s. */
-    // UART_Init();
-    // UART5_Init();
-    // Reset_8266();
-    // SetupWiFi();
+    UART_Init();
+    UART5_Init();
+    Reset_8266();
+    SetupWiFi();
 
     /* Initialize all ports. */
     Unified_Port_Init();
