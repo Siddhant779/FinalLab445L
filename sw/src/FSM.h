@@ -6,7 +6,6 @@
 enum StateName{
     menu_mus, // Music option within menu
     menu_msg, // Message option within menu
-    menu_set, // Settings option within menu
     menu_play, // Now-Playing option within menu
     menu_pl, // Play/Pause button within menu
     menu_fa, // Next-Song within menu
@@ -26,9 +25,6 @@ enum StateName{
     np_fa, // Next-Song within Now-Playing
     np_re, // Rewind within Now-Playing
     np_ba, // Back button to menu within Now-Playing
-    set_col, // Changing color option for setting page
-    set_wifi, // Wifi option for setting page 
-    set_bck, // Exits settings
     msg_key, // Keyboard button for message page 
     msg_bck // Back button to menu within message page 
 
@@ -41,6 +37,8 @@ typedef struct State{
     enum StateName Next[5];
 
 } State_t;
+
+extern enum StateName top;
 
 void FSM_Init();
 

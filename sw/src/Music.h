@@ -15,11 +15,11 @@ extern uint32_t Count8;
 extern uint8_t *front8; // buffer being output to DAC
 extern uint8_t *back8;  // buffer being loaded from SDC
 extern int flag8; // 1 means need data into back
-#define NUMBUF8 (2241504/BUFSIZE8)
 extern uint32_t BufCount8; // 0 to NUMBUF8-1
 extern uint8_t done_song;
 extern uint8_t stop_dac;
 extern uint32_t counterSong;
+extern uint32_t progress_length;
 
 #define BITBUFSIZE16 10000
 
@@ -34,9 +34,10 @@ typedef struct Music{
 
 } Music;
 
-extern const Music Songs[3];
+extern const Music Songs[7];
 
 extern uint8_t SongStrIndex;
+extern uint8_t SongTopDis;
 // Initialize music driver
 void music_init(void);
 

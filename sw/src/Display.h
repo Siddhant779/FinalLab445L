@@ -6,7 +6,7 @@
 #include "ILI9341.h"
 #include "FSM.h"
 
-void drawSettingsPage(enum StateName menu);
+// void drawSettingsPage(enum StateName menu);
 
 void drawMusicPage(enum StateName menu);
 

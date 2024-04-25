@@ -17,6 +17,7 @@ uint32_t SongIndex;
 uint32_t SongLength;
 uint16_t Volume;
 uint32_t counterSong;
+uint32_t progress_length;
 
 uint8_t Buf[BUFSIZE8];
 uint8_t Buf2[BUFSIZE8];
@@ -43,14 +44,14 @@ FIL Handle2;
 FRESULT Fresult;
 
 
-const Music Songs[3] = {
-    {"weekIM.bin", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
+const Music Songs[7] = {
+  {"weekIM.bin", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
 	{"creepIM.bin", "Creep.bin", "Creep", "Radiohead", "Pablo Honey", 2610720},
-	{"takeFiIM.bin", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184}
-	//{"denimIM.bin", "Denim.bin", "Japanese Denim", "Daniel Caesar", "Acoustic Break", 2986086},
-	//{"hotelIM.bin", "Hotel.bin", "Hotel California", "Eagles", "Hotel California", 4302432},
-	//{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Bewitched", 1869546},
-	//{"kesariyaIM.bin", "Kesariya.bin", "Kesariya", "Arijit Singh", "Brahmastra", 2956544},
+	{"takeFiIM.bin", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184},
+	{"denimIM.bin", "Denim.bin", "Japanese Denim", "Daniel Caesar", "Acoustic Break", 2986086},
+	{"hotelIM.bin", "Hotel.bin", "Hotel California", "Eagles", "Hotel California", 4302432},
+	{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Bewitched", 1869546},
+	{"kesarIM.bin", "Kesariya.bin", "Kesariya", "Arijit Singh", "Brahmastra", 2956544}
 };
 
 void music_init(void) {
@@ -60,7 +61,7 @@ void music_init(void) {
 	adc_init();
 	Timer2A_Init(&send_to_dac, 7256, 1);
 	Timer2A_Stop();
-	Timer4A_Init(&buffer_in, 371507, 7);
+	Timer4A_Init(&buffer_in, 371507, 4);
 }
 
 void buffer_in(void) {
@@ -70,12 +71,12 @@ void buffer_in(void) {
 		Fresult = f_read(&Handle2, back8, BUFSIZE8,
 			&successfulreads);
 		if(Fresult){
-			ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
+			ILI9341_DrawString(52, 10, "read song error ",0x03E0 , 2);
 			while(1){};
 		}
 		BufCount8++;
-		//if(BufCount8%COUNT) // Increasse length of progress bar
-		if(BufCount8 == NUMBUF8){ // could have seeked
+		if(!(BufCount8%((Songs[SongStrIndex].byte_size/BUFSIZE8)/100))) progress_length++;
+		if(BufCount8 == Songs[SongStrIndex].byte_size/BUFSIZE8){ // could have seeked
 			Fresult = f_close(&Handle2);
 			done_song = 1;
 			Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
@@ -110,18 +111,21 @@ void send_to_dac(void) {
 }
 
 void load_song(void) {
+	Timer2A_Stop();
 	//TO-DO: Open the song bin currently pointed to by SongStrIndex
 	Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
     if(Fresult){
-        ILI9341_DrawString(52, 0, "testFile error",0x03E0 , 2);
+        ILI9341_DrawString(52, 0, "song file error",0x03E0 , 2);
     }
     if(Fresult == FR_OK) {
         //ILI9341_DrawString(52, 0, "opened music file ",0x03E0 , 2);
     }
-	unpause_song();
+	progress_length = 0;
+	Timer2A_Start();
 }
 
 void close_song(void) {
+	Timer2A_Stop();
 	Fresult = f_close(&Handle2);
 }
 
@@ -135,14 +139,8 @@ void unpause_song(void) {
 
 void rewind_song(void) {
 	Timer2A_Stop();
-	Fresult = f_close(&Handle2);Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
-    if(Fresult){
-        ILI9341_DrawString(52, 0, "testFile error",0x03E0 , 2);
-    }
-    if(Fresult == FR_OK) {
-        //ILI9341_DrawString(52, 0, "opened music file ",0x03E0 , 2);
-    }
-	Timer2A_Start();
+	Fresult = f_close(&Handle2);
+	load_song();
 }
 
 bool is_playing(void) {
@@ -181,7 +179,6 @@ uint16_t ADC_In(void){
 }
 
 
-
 void LoadBitmap(char Filename[]) {
 	Fresult = f_open(&Handle2, Filename, FA_READ);
 	if(Fresult){
@@ -193,7 +190,7 @@ void LoadBitmap(char Filename[]) {
 	
 	Fresult = f_read(&Handle2, Bitmap, BITBUFSIZE16*2, &successfulreads);
 	if(Fresult){
-		ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
+		ILI9341_DrawString(52, 10, "read bitmap error ",0x03E0 , 2);
 		while(1){};
 	}
     Fresult = f_close(&Handle2);
@@ -202,29 +199,29 @@ void LoadBitmap(char Filename[]) {
 void replacealbumCover(enum StateName menu, bool replace) {
 	if(menu >= menu_mus && menu <= mus_ba) {
 		if(replace) {
-			ILI9341_fillRect(15, 30, 100, 100, ILI9341_WHITE);
+			ILI9341_fillRect(25, 45, 100, 100, ILI9341_WHITE);
 		}
-		ILI9341_DrawBitmap(15,145,Bitmap, 100, 100);
+		ILI9341_DrawBitmap(25,145,Bitmap, 100, 100);
 	}
 	else if(menu >= np_pl && menu <= np_ba){
 		if(replace) {
-			ILI9341_fillRect(15, 30, 110, 110, ILI9341_WHITE);
+			ILI9341_fillRect(180, 50, 100, 100, ILI9341_WHITE);
 		}
-    	ILI9341_DrawBitmap(150,170,Bitmap, 100, 100);
+    	ILI9341_DrawBitmap(180,150,Bitmap, 100, 100);
 
-		ILI9341_SetCursor(20, 6);
+		ILI9341_SetCursor(22, 8);
 		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
-		ILI9341_SetCursor(20, 6);
+		ILI9341_SetCursor(22, 8);
 		ILI9341_OutStringSize(Songs[SongStrIndex].song_name,ILI9341_BLACK, 1);
 			
-		ILI9341_SetCursor(20, 7);
+		ILI9341_SetCursor(22, 9);
 		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
-		ILI9341_SetCursor(20, 7);
+		ILI9341_SetCursor(22, 9);
 		ILI9341_OutStringSize(Songs[SongStrIndex].album_name,ILI9341_BLACK, 1);
 			
-		ILI9341_SetCursor(20, 8);
+		ILI9341_SetCursor(22, 10);
 		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
-		ILI9341_SetCursor(20, 8);
+		ILI9341_SetCursor(22, 10);
 		ILI9341_OutStringSize(Songs[SongStrIndex].artist_name,ILI9341_BLACK, 1);
 	}
     

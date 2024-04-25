@@ -14,11 +14,10 @@ Inputs:
 3 = Down
 4 = Enter
 */ 
-const State_t FSM[26] = {
+const State_t FSM[22] = {
     {menu_mus, &screen_clear, {menu_play, menu_re, menu_mus, menu_msg, song1}},
-    {menu_msg, &screen_clear, {menu_mus, menu_re, menu_msg, menu_set, msg_key}},
-    {menu_set, &screen_clear, {menu_msg, menu_re, menu_set, menu_play, set_col}},
-    {menu_play, &screen_clear, {menu_set, menu_re, menu_play, menu_mus, np_pl}},
+    {menu_msg, &screen_clear, {menu_mus, menu_re, menu_msg, menu_play, msg_key}},
+    {menu_play, &screen_clear, {menu_msg, menu_re, menu_play, menu_mus, np_pl}},
     {menu_pl, &Play_pause, {menu_pl, menu_fa, menu_re, menu_pl, menu_pl}},
     {menu_fa, &Next_song, {menu_fa, menu_fa, menu_pl, menu_fa, menu_fa}},
     {menu_re, &Rewind_song, {menu_re, menu_pl, menu_mus, menu_re, menu_re}},
@@ -37,9 +36,6 @@ const State_t FSM[26] = {
     {np_fa, &Next_song, {np_ba, np_fa, np_pl, np_fa, np_fa}},
     {np_re, &Rewind_song, {np_ba, np_pl, np_ba, np_re, np_re}},
     {np_ba, &screen_clear, {np_ba, np_re, np_ba, np_re, menu_mus}},
-    {set_col, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
-    {set_wifi, &Do_Nothing, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
-    {set_bck, &screen_clear, {menu_mus, menu_mus, menu_mus, menu_mus, menu_mus}}, // DO THIS LATER
     {msg_key, &keys_cursor, {msg_key, msg_key, msg_key, msg_key, msg_key}}
     
 };
@@ -47,9 +43,10 @@ const State_t FSM[26] = {
 State_t current_state;
 uint8_t clear_flag;
 uint8_t jump_state_flag;
-
+enum StateName top;
 
 void FSM_Init(){
+    top = song1;
     current_state = FSM[0];
 	clear_flag = 0;
 	jump_state_flag = 0;
@@ -133,7 +130,7 @@ void Start_song(uint8_t input) {
 	if (input == 5){
 			//first set the SongStrIndex based on the state
             close_song();
-			SongStrIndex =  (uint8_t)(Get_State().name) - 7; // replaces with the song 
+			SongStrIndex =  (uint8_t)(Get_State().name) - 6; // replaces with the song 
 			LoadBitmap(Songs[SongStrIndex].album_file);
             replacealbumCover(Get_State().name, true);
 			// Call function that opens song file and sets flag8

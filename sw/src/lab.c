@@ -141,6 +141,8 @@ int main(void) {
 
     LoadBitmap(Songs[SongStrIndex].album_file);
     replacealbumCover(Get_State().name, false);
+    load_song();
+    pause_song();
 
     // Main while loop of system
     while(1){
@@ -155,7 +157,6 @@ int main(void) {
         switch(current_state.name){
             case menu_mus:
             case menu_msg:
-            case menu_set:
             case menu_play:
             case menu_pl:
             case menu_fa:
@@ -180,11 +181,6 @@ int main(void) {
             case np_re:
             case np_ba:
                 drawNowPlayingPage(current_state.name);
-                break;
-            case set_col:
-            case set_wifi:
-            case set_bck:
-                drawSettingsPage(current_state.name);
                 break;
             case msg_bck:
             case msg_key:
