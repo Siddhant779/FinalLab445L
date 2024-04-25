@@ -31,7 +31,8 @@ char hist_six[40];
 char hist_seven[40];
 char hist_eight[40];
 char hist_nine[40];
-char*  history[10] = {hist_zero, hist_one, hist_two, hist_three, hist_four, hist_five, hist_six, hist_seven, hist_eight, hist_nine};
+Message history[10] = {{hist_zero,0} , {hist_one,0}, {hist_two,0}, {hist_three,0}, {hist_four,0}, 
+												{hist_five,0}, {hist_six,0}, {hist_seven,0}, {hist_eight,0}, {hist_nine,0}};
 
 uint8_t history_idx;
 
@@ -106,8 +107,8 @@ void display_keys(void){
 	y = 4;
 	ILI9341_SetCursor(x,y);
 	for (int i = 0; i < history_idx; i++){ //print the message history
-		uint32_t color = ILI9341_BLUE;
-		ILI9341_OutString(history[i], color);
+		uint32_t color = (history[i].owner) ? ILI9341_GREEN : ILI9341_BLUE;
+		ILI9341_OutString(history[i].msg, color);
 		y++;
 		ILI9341_SetCursor(x,y);
 	}
@@ -227,29 +228,13 @@ void append_message(void){
 				need_erase_text = 1;
 			}
 			else if (character.col == 3){//ENTER
-				Message msg;
-				uint8_t str_len = strlen(type_message);
-				strncpy(msg.msg, type_message, BUFFER_SIZE - 1);
-				msg.msg[str_len] = '\n';
-				msg.msg[str_len + 1] = '\0';
-				msg.owner = 0;
-				sendMessage(msg);
-				if (history_idx < 10){
-					history[history_idx] = strncpy(history[history_idx], type_message, message_index);
-					history[history_idx][message_index] = 0;
-					history_idx++;
-					message_erase();
-				}
-				if (history_idx == 10){
-					char* temp = history[0];
-					for (int i = 0; i < 9; i++){
-						history[i] = history[i+1];
-					}
-					history[9] = temp;
-					history[9] = strncpy(history[9], type_message, message_index);
-					history[9][message_index] = 0;
-					message_erase();
-				}
+				Message msg = {type_message, 0};
+//				uint8_t str_len = strlen(type_message);
+//				strncpy(msg.msg, type_message, BUFFER_SIZE - 1);
+//				msg.msg[str_len] = '\0';
+//				msg.owner = 0;
+				sendMessage(&msg);
+				add_history(type_message, 0);
 			}
 		}
 		else if (character.row == -1 && character.col == -1){//go back in the menu
@@ -260,22 +245,24 @@ void append_message(void){
 	}
 }
 
-void add_history(Message msg){
-				uint8_t length = strlen(msg.msg);
+void add_history(char* msg, uint8_t owner){
+				uint8_t length = strlen(msg);
 				if (history_idx < 10){
-					history[history_idx] = strncpy(history[history_idx], msg.msg, length);
-					history[history_idx][message_index] = 0;
+					history[history_idx].msg = strncpy(history[history_idx].msg, msg, length);
+					(history[history_idx].msg)[length] = 0;
+					history[history_idx].owner = owner;
 					history_idx++;
 					message_erase();
 				}
 				if (history_idx == 10){
-					char* temp = history[0];
+					Message temp = history[0];
 					for (int i = 0; i < 9; i++){
 						history[i] = history[i+1];
 					}
 					history[9] = temp;
-					history[9] = strncpy(history[9], type_message, message_index);
-					history[9][message_index] = 0;
+					history[9].msg = strncpy(history[9].msg, msg, length);
+					(history[9].msg)[length] = 0;
+					history[9].owner = owner;
 					message_erase();
 				}
 }

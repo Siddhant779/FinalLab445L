@@ -185,9 +185,15 @@ void ESP2TM4C(void) {
   if (parse == 0x1) ParseMsg();                         // Call the parser if new Command received
 }
 
-void sendMessage(Message m) {
-	UART5_OutString(m.msg);
-	UART5_OutChar('\n');
+void sendMessage(Message* m) {\
+	UART5_OutChar('~');
+	UART5_OutChar(strlen(m->msg));
+	UART5_OutChar('@');
+	UART5_OutString(m->msg);
+//	UART_OutChar('~');
+//	UART_OutChar(strlen(m->msg)+0x30);
+//	UART_OutChar('@');
+//	UART_OutString(m->msg);
 }
 
 void setSSID(char new_ssid[], uint8_t str_len) {

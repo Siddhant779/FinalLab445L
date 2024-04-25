@@ -17,4 +17,4 @@ void append_message(void);
 void message_init(void);
 void message_erase(void);
 void keys_cursor(uint8_t input);
-void add_history(Message msg);
+void add_history(char* msg, uint8_t owner);
