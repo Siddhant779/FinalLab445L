@@ -113,7 +113,7 @@ void Next_song(uint8_t input) {
         // Close current song file
         close_song();
         // Increment song index
-        SongStrIndex = (SongStrIndex+1)%7;
+        SongStrIndex = (SongStrIndex+1)%16;
         // Load in new album cover bitmap
         LoadBitmap(Songs[SongStrIndex].album_file);
         replacealbumCover(Get_State().name, true);
@@ -127,7 +127,7 @@ void Start_song(uint8_t input) {
 	if (input == 5){
 			//first set the SongStrIndex based on the state
             close_song();
-			SongStrIndex =  ((uint8_t)(Get_State().name) - 6 + top)%8; // REPLACE 8 WITH NUMBER OF SONGS IN STRUCT
+			SongStrIndex =  ((uint8_t)(Get_State().name) - 6 + top)%16; // REPLACE 8 WITH NUMBER OF SONGS IN STRUCT
 			LoadBitmap(Songs[SongStrIndex].album_file);
             replacealbumCover(Get_State().name, true);
 			// Call function that opens song file and sets flag8

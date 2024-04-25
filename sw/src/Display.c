@@ -126,7 +126,7 @@ void drawNowPlayingPage(enum StateName menu) {
 }
 uint8_t top = 0;
 uint8_t inc_top(void){
-    if (top < 1){ //WHEN WE ADD MORE SONGS change 1 to (# of songs - 7)
+    if (top < 9){ //WHEN WE ADD MORE SONGS change 1 to (# of songs - 7)
         top++;
         return 1;
     }

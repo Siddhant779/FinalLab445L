@@ -34,7 +34,7 @@ typedef struct Music{
 
 } Music;
 
-extern const Music Songs[8];
+extern const Music Songs[16];
 
 extern uint8_t SongStrIndex;
 extern uint8_t SongTopDis;

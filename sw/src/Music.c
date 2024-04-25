@@ -44,7 +44,7 @@ FIL Handle2;
 FRESULT Fresult;
 
 
-const Music Songs[8] = {
+const Music Songs[16] = {
   {"weekIM.bin", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
 	{"creepIM.bin", "Creep.bin", "Creep", "Radiohead", "Pablo Honey", 2610720},
 	{"takeFiIM.bin", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184},
@@ -52,7 +52,15 @@ const Music Songs[8] = {
 	{"hotelIM.bin", "Hotel.bin", "Hotel California", "Eagles", "Hotel California", 4302432},
 	{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Bewitched", 1869546},
 	{"kesarIM.bin", "Kesariya.bin", "Kesariya", "Arijit Singh", "Brahmastra", 2956544},
-	{"kesarIM.bin", "Kesariya.bin", "ASMR", "Joon", "Youtube", 2956544}
+	{"replayIM.bin", "Replay.bin", "Replay", "Iyaz", "Replay", 2010368},
+	{"mtbIM.bin", "Mtb.bin", "Meant To Be", "Rexha", "All Your Fault", 1810361},
+	{"chsIM.bin", "Chs.bin", "Can't Hold Us", "Macklemore", "The Heist", 2833920},
+	{"tlibIM.bin", "Tlib.bin", "The Less I Know The Better", "Tame Impala", "Currents", 2608205},
+	{"koflIM.bin", "KoflIM.bin", "Kiss of Life", "Sade", "Love Deluxe", 2771712},
+	{"startIM.bin", "Dream.bin", "Dreamer", "Laufey", "Bewitched", 2324992},
+	{"runIM.bin", "Run.bin", "Runaway", "Kanye West", "MBDTF", 6039040},
+	{"idwlfIM.bin", "Idwlf.bin", "I Don't Wanna Live Forever", "Taylor Swift", "Fifty Shades Darker", 3077991},
+	{"vivaIM.bin", "Viva.bin", "Viva La Vida", "Coldplay", "Viva La Vida", 2908480},
 };
 
 void music_init(void) {
