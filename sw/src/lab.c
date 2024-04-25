@@ -63,6 +63,8 @@ controls file - buttons deals with that
 #include "Messages.h"
 #include "FSM.h"
 #include "./inc/Timer5A.h"
+#include "./inc/UART5.h"
+#include "./inc/esp8266_base.h"
 // port b 6
 
 /** MMAP Pin definitions. */
@@ -188,9 +190,6 @@ int main(void) {
             case msg_key:
                 display_keys();
                 break;
-        }
-        if(flag8){ // 1 means need data
-            buf_song();
         }
         // other tasks
     }

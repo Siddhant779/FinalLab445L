@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include "FSM.h"
 
-
 extern uint16_t Volume;
 extern uint16_t DacData;
 
@@ -60,11 +59,7 @@ void rewind_song(void);
 // Returns true if a song is playing, returns false otherwise
 bool is_playing(void);
 
-// Buffer in the next chunk of the song
-void buf_song(void);
-
 void replacealbumCover(enum StateName menu, bool replace);
-
 
 void LoadBitmap(char Filename[]);
 

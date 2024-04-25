@@ -5,20 +5,18 @@
 #include "./inc/DAC.h"
 #include "./inc/Timer2A.h"
 #include "./inc/Timer3A.h"
+#include "./inc/Timer4A.h"
 #include "../inc/tm4c123gh6pm.h"
 #include "../lib/SD/eDisk.h"
 #include "../lib/SD/ff.h"
 #include "Display.h"
 
 
-//#define PB5		(*((volatile uint32_t *)0x40005080))
-
 const uint16_t *SongArray;
 uint32_t SongIndex;
 uint32_t SongLength;
 uint16_t Volume;
 uint32_t counterSong;
-
 
 uint8_t Buf[BUFSIZE8];
 uint8_t Buf2[BUFSIZE8];
@@ -35,6 +33,7 @@ uint16_t Bitmap[BITBUFSIZE16];
 
 UINT successfulreads, successfulwrites;
 
+void buffer_in(void);
 void adc_init(void);
 void send_to_dac(void);
 void update_volume(void);
@@ -51,7 +50,7 @@ const Music Songs[3] = {
 	//{"denimIM.bin", "Denim.bin", "Japanese Denim", "Daniel Caesar", "Acoustic Break", 2986086},
 	//{"hotelIM.bin", "Hotel.bin", "Hotel California", "Eagles", "Hotel California", 4302432},
 	//{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Bewitched", 1869546},
-	//{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Bewitched", 1869546},
+	//{"kesariyaIM.bin", "Kesariya.bin", "Kesariya", "Arijit Singh", "Brahmastra", 2956544},
 };
 
 void music_init(void) {
@@ -61,6 +60,28 @@ void music_init(void) {
 	adc_init();
 	Timer2A_Init(&send_to_dac, 7256, 1);
 	Timer2A_Stop();
+	Timer4A_Init(&buffer_in, 371507, 7);
+}
+
+void buffer_in(void) {
+	if(flag8 == 1) {
+		flag8 = 0;
+		// 1.5ms to 1.6ms to read 512 bytes
+		Fresult = f_read(&Handle2, back8, BUFSIZE8,
+			&successfulreads);
+		if(Fresult){
+			ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
+			while(1){};
+		}
+		BufCount8++;
+		//if(BufCount8%COUNT) // Increasse length of progress bar
+		if(BufCount8 == NUMBUF8){ // could have seeked
+			Fresult = f_close(&Handle2);
+			done_song = 1;
+			Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
+			BufCount8 = 0;
+		}
+	}
 }
 
 void send_to_dac(void) {
@@ -86,8 +107,6 @@ void send_to_dac(void) {
 		}
 		Count8 = 0;
   }
-		
-
 }
 
 void load_song(void) {
@@ -103,27 +122,7 @@ void load_song(void) {
 }
 
 void close_song(void) {
-	// TO-DO: Close the song file currently pointed to by SongStrIndex
 	Fresult = f_close(&Handle2);
-}
-
-void buf_song(void) {
-	flag8 = 0;
-	// 1.5ms to 1.6ms to read 512 bytes
-	Fresult = f_read(&Handle2, back8, BUFSIZE8,
-		&successfulreads);
-	if(Fresult){
-		ILI9341_DrawString(52, 10, "read error ",0x03E0 , 2);
-		while(1){};
-	}
-	BufCount8++;
-	//if(BufCount8%COUNT) // Increasse length of progress bar
-	if(BufCount8 == NUMBUF8){ // could have seeked
-		Fresult = f_close(&Handle2);
-		done_song = 1;
-		Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
-		BufCount8 = 0;
-	}
 }
 
 void pause_song(void) {
@@ -136,6 +135,14 @@ void unpause_song(void) {
 
 void rewind_song(void) {
 	Timer2A_Stop();
+	Fresult = f_close(&Handle2);Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
+    if(Fresult){
+        ILI9341_DrawString(52, 0, "testFile error",0x03E0 , 2);
+    }
+    if(Fresult == FR_OK) {
+        //ILI9341_DrawString(52, 0, "opened music file ",0x03E0 , 2);
+    }
+	Timer2A_Start();
 }
 
 bool is_playing(void) {
@@ -191,7 +198,6 @@ void LoadBitmap(char Filename[]) {
 	}
     Fresult = f_close(&Handle2);
 }
-
 
 void replacealbumCover(enum StateName menu, bool replace) {
 	if(menu >= menu_mus && menu <= mus_ba) {

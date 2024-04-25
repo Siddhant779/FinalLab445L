@@ -115,6 +115,7 @@ void Rewind_song(uint8_t input) {
 
 void Next_song(uint8_t input) {
 	if (input == 5){
+        pause_song();
         // Close current song file
         close_song();
         // Increment song index
@@ -123,6 +124,7 @@ void Next_song(uint8_t input) {
         LoadBitmap(Songs[SongStrIndex].album_file);
         replacealbumCover(Get_State().name, true);
         // Open new song file
+        load_song();
 	}
     // Load and start the next song in the list
 }
