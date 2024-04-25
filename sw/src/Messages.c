@@ -263,6 +263,7 @@ void add_history(char* msg, uint8_t owner){
 					history[9].msg = strncpy(history[9].msg, msg, length);
 					(history[9].msg)[length] = 0;
 					history[9].owner = owner;
+					set_clear_flag(1);
 					message_erase();
 				}
 }
