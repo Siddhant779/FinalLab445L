@@ -33,3 +33,6 @@ void Timer4A_Init(void(*task)(void), uint32_t period, uint32_t priority);
 
 
 void Timer4A_Stop(void);
+
+
+void Timer4A_Start(void);

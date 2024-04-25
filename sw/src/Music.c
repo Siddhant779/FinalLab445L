@@ -44,14 +44,15 @@ FIL Handle2;
 FRESULT Fresult;
 
 
-const Music Songs[7] = {
+const Music Songs[8] = {
   {"weekIM.bin", "Lights.bin", "Blinding Lights", "The Weeknd", "After Hours", 2241504},
 	{"creepIM.bin", "Creep.bin", "Creep", "Radiohead", "Pablo Honey", 2610720},
 	{"takeFiIM.bin", "TakeFive.bin", "Take Five", "Dave Brubeck", "Time Out", 3603184},
 	{"denimIM.bin", "Denim.bin", "Japanese Denim", "Daniel Caesar", "Acoustic Break", 2986086},
 	{"hotelIM.bin", "Hotel.bin", "Hotel California", "Eagles", "Hotel California", 4302432},
 	{"startIM.bin", "Start.bin", "From the Start", "Laufey", "Bewitched", 1869546},
-	{"kesarIM.bin", "Kesariya.bin", "Kesariya", "Arijit Singh", "Brahmastra", 2956544}
+	{"kesarIM.bin", "Kesariya.bin", "Kesariya", "Arijit Singh", "Brahmastra", 2956544},
+	{"kesarIM.bin", "Kesariya.bin", "ASMR", "Joon", "Youtube", 2956544}
 };
 
 void music_init(void) {
@@ -80,6 +81,10 @@ void buffer_in(void) {
 			Fresult = f_close(&Handle2);
 			done_song = 1;
 			Fresult = f_open(&Handle2, Songs[SongStrIndex].song_file, FA_READ);
+			if(Fresult){
+				ILI9341_DrawString(52, 10, "bufferIn2error ",0x03E0 , 2);
+				while(1){};
+			}
 			BufCount8 = 0;
 		}
 	}
@@ -122,10 +127,12 @@ void load_song(void) {
     }
 	progress_length = 0;
 	Timer2A_Start();
+	Timer4A_Start();
 }
 
 void close_song(void) {
 	Timer2A_Stop();
+	Timer4A_Stop();
 	Fresult = f_close(&Handle2);
 }
 
@@ -209,20 +216,21 @@ void replacealbumCover(enum StateName menu, bool replace) {
 		}
     	ILI9341_DrawBitmap(180,150,Bitmap, 100, 100);
 
-		ILI9341_SetCursor(22, 8);
-		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
-		ILI9341_SetCursor(22, 8);
-		ILI9341_OutStringSize(Songs[SongStrIndex].song_name,ILI9341_BLACK, 1);
+		//ILI9341_SetCursor(30, 8);
+		//ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+		//ILI9341_SetCursor(22, 8);
+		//ILI9341_OutString(Songs[SongStrIndex].song_name,ILI9341_BLACK);
+		// ILI9341_OutStringSize("Music",color, 2);
 			
-		ILI9341_SetCursor(22, 9);
-		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
-		ILI9341_SetCursor(22, 9);
-		ILI9341_OutStringSize(Songs[SongStrIndex].album_name,ILI9341_BLACK, 1);
+		//ILI9341_SetCursor(30, 9);
+		//ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+		//ILI9341_SetCursor(22, 9);
+		// ILI9341_OutString(Songs[SongStrIndex].album_name,ILI9341_BLACK);
 			
-		ILI9341_SetCursor(22, 10);
-		ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
-		ILI9341_SetCursor(22, 10);
-		ILI9341_OutStringSize(Songs[SongStrIndex].artist_name,ILI9341_BLACK, 1);
+		//ILI9341_SetCursor(30, 10);
+		//ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+		//ILI9341_SetCursor(22, 10);
+		//ILI9341_OutString(Songs[SongStrIndex].artist_name,ILI9341_BLACK);
 	}
     
 }

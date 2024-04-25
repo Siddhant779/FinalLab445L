@@ -57,3 +57,8 @@ void Timer4A_Stop(void){
   NVIC_DIS2_R = 0x00000040;        // 9) disable interrupt 70 in NVIC
   TIMER4_CTL_R = 0x00000000;       // 10) disable timer4A
 }
+
+void Timer4A_Start(void){
+  NVIC_EN2_R = 0x00000040;        // 9) disable interrupt 70 in NVIC
+  TIMER4_CTL_R = 0x00000001;       // 10) disable timer4A
+}

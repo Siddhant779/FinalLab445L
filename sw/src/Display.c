@@ -108,15 +108,40 @@ void drawNowPlayingPage(enum StateName menu) {
     ILI9341_OutStringSize("Back",color, 2);
 
 
-    // ILI9341_SetCursor(21, );
-    // ILI9341_OutStringSize(Songs[SongStrIndex].song_name,ILI9341_BLACK, 1);
+    ILI9341_SetCursor(22, 8);
+    ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+    ILI9341_SetCursor(22, 8);
+    ILI9341_OutStringSize(Songs[SongStrIndex].song_name,ILI9341_BLACK, 1);
 		
-	// ILI9341_SetCursor(21, 7);
-    // ILI9341_OutStringSize(Songs[SongStrIndex].album_name,ILI9341_BLACK, 1);
+	ILI9341_SetCursor(22, 9);
+    ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+    ILI9341_SetCursor(22, 9);
+    ILI9341_OutStringSize(Songs[SongStrIndex].album_name,ILI9341_BLACK, 1);
 		
-	// ILI9341_SetCursor(21, 8);
-    // ILI9341_OutStringSize(Songs[SongStrIndex].artist_name,ILI9341_BLACK, 1);
+	ILI9341_SetCursor(22, 10);
+    ILI9341_OutStringSize("                  ",ILI9341_BLACK, 1);
+    ILI9341_SetCursor(22, 10);
+    ILI9341_OutStringSize(Songs[SongStrIndex].artist_name,ILI9341_BLACK, 1);
 		
+}
+uint8_t top = 0;
+uint8_t inc_top(void){
+    if (top < 1){ //WHEN WE ADD MORE SONGS change 1 to (# of songs - 7)
+        top++;
+        return 1;
+    }
+    return 0;
+}
+uint8_t dec_top(void){
+if (top > 0){
+        top--;
+        return 1;
+    }
+    return 0;
+}
+
+uint8_t get_top(void) {
+    return top;
 }
 
 void drawMusicPage(enum StateName menu){
@@ -130,63 +155,58 @@ void drawMusicPage(enum StateName menu){
     uint8_t x = 52;
     uint8_t y = 2;
 
-    for(int i = 0; i < 7; i++) {
-       ILI9341_SetCursor(52,2);
-       color = ((menu-6)== song1) ? ILI9341_BLUE : ILI9341_BLACK;
-    }
-
     ILI9341_SetCursor(52,2);
     color = (menu == song1) ? ILI9341_BLUE : ILI9341_BLACK;
-    ILI9341_OutStringSize(Songs[0].song_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+0].song_name,color, 1);
     ILI9341_SetCursor(52,3);
-    ILI9341_OutStringSize(Songs[0].artist_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+0].artist_name,color, 1);
     ILI9341_drawHLine(160, 44, 160, ILI9341_BLACK, 2);
 
     ILI9341_SetCursor(52,5);
     color = (menu == song2) ? ILI9341_BLUE : ILI9341_BLACK;
-    ILI9341_OutStringSize(Songs[1].song_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+1].song_name,color, 1);
     ILI9341_SetCursor(52,6);
-    ILI9341_OutStringSize(Songs[1].artist_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+1].artist_name,color, 1);
     ILI9341_drawHLine(160, 74, 160, ILI9341_BLACK, 2);
 
 
     ILI9341_SetCursor(52,8);
     color = (menu == song3) ? ILI9341_BLUE : ILI9341_BLACK;
-    ILI9341_OutStringSize(Songs[2].song_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+2].song_name,color, 1);
     ILI9341_SetCursor(52,9);
-    ILI9341_OutStringSize(Songs[2].artist_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+2].artist_name,color, 1);
     ILI9341_drawHLine(160, 104, 160, ILI9341_BLACK, 2);
 
     
     ILI9341_SetCursor(52,11);
     color = (menu == song4) ? ILI9341_BLUE : ILI9341_BLACK;
-    ILI9341_OutStringSize(Songs[3].song_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+3].song_name,color, 1);
     ILI9341_SetCursor(52,12);
-    ILI9341_OutStringSize(Songs[3].artist_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+3].artist_name,color, 1);
     ILI9341_drawHLine(160, 134, 160, ILI9341_BLACK, 2);
 
 
     ILI9341_SetCursor(52,14);
     color = (menu == song5) ? ILI9341_BLUE : ILI9341_BLACK;
-    ILI9341_OutStringSize(Songs[4].song_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+4].song_name,color, 1);
     ILI9341_SetCursor(52,15);
-    ILI9341_OutStringSize(Songs[4].artist_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+4].artist_name,color, 1);
     ILI9341_drawHLine(160, 164, 160, ILI9341_BLACK, 2);
 
 
     ILI9341_SetCursor(52,17);
     color = (menu == song6) ? ILI9341_BLUE : ILI9341_BLACK;
-    ILI9341_OutStringSize(Songs[5].song_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+5].song_name,color, 1);
     ILI9341_SetCursor(52,18);
-    ILI9341_OutStringSize(Songs[5].artist_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+5].artist_name,color, 1);
     ILI9341_drawHLine(160, 194, 160, ILI9341_BLACK, 2);
 
 
     ILI9341_SetCursor(52,20);
     color = (menu == song7) ? ILI9341_BLUE : ILI9341_BLACK;
-    ILI9341_OutStringSize(Songs[6].song_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+6].song_name,color, 1);
     ILI9341_SetCursor(52,21);
-    ILI9341_OutStringSize(Songs[6].artist_name,color, 1);
+    ILI9341_OutStringSize(Songs[top+6].artist_name,color, 1);
     ILI9341_drawHLine(160, 224, 160, ILI9341_BLACK, 2);
     
 

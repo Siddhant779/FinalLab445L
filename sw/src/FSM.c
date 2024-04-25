@@ -21,13 +21,13 @@ const State_t FSM[22] = {
     {menu_pl, &Play_pause, {menu_pl, menu_fa, menu_re, menu_pl, menu_pl}},
     {menu_fa, &Next_song, {menu_fa, menu_fa, menu_pl, menu_fa, menu_fa}},
     {menu_re, &Rewind_song, {menu_re, menu_pl, menu_mus, menu_re, menu_re}},
-    {song1, &Start_song, {song7, mus_re, song1, song2, song1}},
+    {song1, &Start_song, {song1, mus_re, song1, song2, song1}},
     {song2, &Start_song, {song1, mus_re, song2, song3, song2}},
     {song3, &Start_song, {song2, mus_re, song3, song4, song3}},
     {song4, &Start_song, {song3, mus_re, song4, song5, song4}},
     {song5, &Start_song, {song4, mus_re, song5, song6, song5}},
     {song6, &Start_song, {song5, mus_re, song6, song7, song6}},
-    {song7, &Start_song, {song6, mus_re, song7, song1, song7}},
+    {song7, &Start_song, {song6, mus_re, song7, song7, song7}},
     {mus_pl, &Play_pause, {mus_ba, mus_fa, mus_re, mus_pl, mus_pl}},
     {mus_fa, &Next_song, {mus_ba, mus_fa, mus_pl, mus_fa, mus_fa}},
     {mus_re, &Rewind_song, {mus_ba, mus_pl, song1, mus_re, mus_re}},
@@ -43,10 +43,8 @@ const State_t FSM[22] = {
 State_t current_state;
 uint8_t clear_flag;
 uint8_t jump_state_flag;
-enum StateName top;
 
 void FSM_Init(){
-    top = song1;
     current_state = FSM[0];
 	clear_flag = 0;
 	jump_state_flag = 0;
@@ -112,7 +110,6 @@ void Rewind_song(uint8_t input) {
 
 void Next_song(uint8_t input) {
 	if (input == 5){
-        pause_song();
         // Close current song file
         close_song();
         // Increment song index
@@ -130,7 +127,7 @@ void Start_song(uint8_t input) {
 	if (input == 5){
 			//first set the SongStrIndex based on the state
             close_song();
-			SongStrIndex =  (uint8_t)(Get_State().name) - 6; // replaces with the song 
+			SongStrIndex =  ((uint8_t)(Get_State().name) - 6 + top)%8; // REPLACE 8 WITH NUMBER OF SONGS IN STRUCT
 			LoadBitmap(Songs[SongStrIndex].album_file);
             replacealbumCover(Get_State().name, true);
 			// Call function that opens song file and sets flag8
@@ -140,6 +137,16 @@ void Start_song(uint8_t input) {
 			// depending if your in the main menu or music state  - you redraw only the right side 
 			// if you are in the now playing state then you redraw that whole thing 
 	}
+    else if (input == 1 && current_state.name == song1){//scroll up
+        uint8_t stat = dec_top();
+        if (stat)
+            set_clear_flag(1);
+    }
+    else if (input == 4 && current_state.name == song7){//scroll down
+        uint8_t stat = inc_top();
+        if (stat)
+            set_clear_flag(1);
+    }
 };
 
 void screen_clear(uint8_t input){
