@@ -36,7 +36,7 @@ void sendMessage(Message* m);
 // Turns UART message stored in ser_buf into message struct
 // Inputs: None.
 // Outputs: UART and ILI
-Message ParseMsg(void);
+void ParseMsg(void);
 
 //------------------- Reset_8266 --------------
 // Commands the ESP to reset, determines completion by waiting
@@ -66,5 +66,6 @@ void setHost(char new_host[], uint8_t str_len);
 void setPort(char new_port[], uint8_t str_len);
 
 void fullReset(void);
+
 
 #endif

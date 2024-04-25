@@ -21,6 +21,7 @@
 #include "UART5.h"
 #include "esp8266.h"
 #include "./inc/Timer5A.h"
+#include "../src/Messages.h"
 
 #define DEBUG1                // First level of Debug
 #define DEBUG2                // Second level of Debug
@@ -56,6 +57,11 @@
 #define BIT3  0x8   
 
 //#define SKIP_SETUP 0
+
+uint8_t tilda_flag = 0;
+uint8_t start_flag = 0;
+uint8_t number_flag = 0;
+uint8_t msg_len = 0;
 
 char    ssid[32]          = "prithvi";   // Your WiFi Access Point name goes here
 char    pass[32]          = "ece445ltpod";			 			// Your WiFi Access Point password goes here
@@ -146,37 +152,66 @@ void SetupWiFi(void)
 }
 
 
-
-Message ParseMsg(void) {
-	Message msg;
+char message_buffer[40];
+void ParseMsg(void) {
 	uint8_t str_len = strlen(serial_buf);
-	strncpy(msg.msg, ESP2B, BUFFER_SIZE - 1);
-	msg.msg[str_len] = '\0';
-	msg.owner = 1;
-	return msg;
+	//strncpy(message_buffer, serial_buf, str_len);
+	//message_buffer[str_len] = '\0';
+	add_history(serial_buf, 1);
 }
 
 void ESP2TM4C(void) {
 	parse = 0x0;
     
-  if ((UART5_FR_R & UART5_FR_RXFE) ==0 ) {  // Check to see if a there is data in the RXD buffer
+  if ((UART5_FR_R & UART5_FR_RXFE) == 0 ) {  // Check to see if a there is data in the RXD buffer
     input_char =(UART5_DR_R & 0xFF);        // Read the data from the UART
-        
-      if (input_char != '\n')               // If the incoming character is not a newline then process byte
-      {                                     
-        serial_buf[bufpos] = input_char;    // The buffer position in the array get assigned to the current read
-        bufpos++;                           // Once that has happend the buffer advances,doing this over and over
-                                            // again until the end of package marker is read.
-        UART_OutChar(input_char);        		// Debug only
-      }
-      else if (input_char == '\n')
-      {
-        if (bufpos  > 0) {
-          strcpy(ESP2B, serial_buf);
-          parse = 0x1;                      // Parse incoming data
-        }
-        bufpos = 0;                         // Reset for next string
-      } 
+		// ~<LENGTH>@<MSG> 
+			if (tilda_flag == 1) {
+				msg_len = (uint8_t) (input_char - 0x30);
+				tilda_flag = 0;
+				number_flag = 1;
+			}
+			
+			if (input_char == '~') {
+				tilda_flag = 1;
+			}
+			
+			if (msg_len > 0 && start_flag == 1) {
+				serial_buf[bufpos] = input_char;
+				bufpos++;
+				
+				msg_len--;
+			}
+			
+			if (msg_len == 0 && bufpos > 0) {
+				parse = 0x1;
+				serial_buf[bufpos] = '\0';
+				bufpos = 0;
+				start_flag = 0;
+			}
+			
+			if (input_char == '@' && number_flag == 1) {
+				start_flag = 1;
+				number_flag = 0;
+			}
+		
+		
+//      if (input_char != '\n')               // If the incoming character is not a newline then process byte
+//      {                                     
+//        serial_buf[bufpos] = input_char;    // The buffer position in the array get assigned to the current read
+//        bufpos++;                           // Once that has happend the buffer advances,doing this over and over
+//                                            // again until the end of package marker is read.
+////        UART_OutChar(input_char);        		// Debug only
+//				
+//      }
+//      else if (input_char == '\n')
+//      {
+//        if (bufpos  > 0) {
+//          strcpy(ESP2B, serial_buf);
+//          parse = 0x1;                      // Parse incoming data
+//        }
+//        bufpos = 0;                         // Reset for next string
+//      } 
       
     else if ((UART5_FR_R & UART5_FR_RXFE) !=0 ) {     // No new data in the RXD buffer -> Exit routine
     }  
@@ -190,45 +225,36 @@ void sendMessage(Message* m) {\
 	UART5_OutChar(strlen(m->msg));
 	UART5_OutChar('@');
 	UART5_OutString(m->msg);
-//	UART_OutChar('~');
-//	UART_OutChar(strlen(m->msg)+0x30);
-//	UART_OutChar('@');
-//	UART_OutString(m->msg);
 }
 
-void setSSID(char new_ssid[], uint8_t str_len) {
-	strncpy(ssid, new_ssid, 31);
-	ssid[str_len] = '\0';									// Ensure null termination
-}
+//void setSSID(char new_ssid[], uint8_t str_len) {
+//	strncpy(ssid, new_ssid, 31);
+//	ssid[str_len] = '\0';									// Ensure null termination
+//}
 
-void setPass(char new_pass[], uint8_t str_len) {
-	strncpy(pass, new_pass, 31);
-	pass[str_len] = '\0';									// Ensure null termination
-}
+//void setPass(char new_pass[], uint8_t str_len) {
+//	strncpy(pass, new_pass, 31);
+//	pass[str_len] = '\0';									// Ensure null termination
+//}
 
-void setHost(char new_host[], uint8_t str_len) {
-	strncpy(ssid, new_host, 31);
-	ssid[str_len] = '\0';									// Ensure null termination
-}
+//void setHost(char new_host[], uint8_t str_len) {
+//	strncpy(ssid, new_host, 31);
+//	ssid[str_len] = '\0';									// Ensure null termination
+//}
 
-void setPort(char new_port[], uint8_t str_len) {
-	strncpy(ssid, new_port, 15);
-	port[str_len] = '\0';									// Ensure null termination
-}
+//void setPort(char new_port[], uint8_t str_len) {
+//	strncpy(ssid, new_port, 15);
+//	port[str_len] = '\0';									// Ensure null termination
+//}
 
-void fullReset(void) {
-	UART_OutString("Stopping timer...\n");
-	Timer5A_Init(&ESP2TM4C, 0, 4);
-	
-	UART_OutString("Reinitializing UART5...\n");
-	UART5_Init();
-	
-	UART_OutString("Resetting ESP8266...\n");
-	Reset_8266();
-	
-	UART_OutString("Setting up WiFi...\n");
-	SetupWiFi();
-	
-	UART_OutString("Timer reinitializing...");
-	Timer5A_Init(&ESP2TM4C, 400000, 4);
-}
+//void fullReset(void) {
+//	UART_OutString("Stopping timer...\n");
+//	Timer5A_Init(&ESP2TM4C, 0, 4);
+//	
+//	UART_OutString("Reinitializing UART5...\n");
+//	UART5_Init();
+//	
+//	Reset_8266();
+//	SetupWiFi();
+//	Timer5A_Init(&ESP2TM4C, 400000, 4);
+//}

@@ -227,8 +227,11 @@ String getClientMessage() {
 }
 
 void server2tm4c(String msg) {
-  Serial.println(msg);
   Serial.flush();
+  Serial.print('~');
+  Serial.print(msg.length());
+  Serial.print('@');
+  Serial.print(msg);
 }
 
 void loop() {
